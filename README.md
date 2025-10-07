@@ -28,7 +28,7 @@
 - Clean, responsive styling with **Tailwind CSS** and **shadcn-ui** components.
 - Fast tooling powered by **Vite**.
 - Simple local setup for development and prototyping.
-- Ready for seamless deployment on platforms like Vercel or Netlify.:contentReference[oaicite:1]{index=1}
+- Ready for seamless deployment on platforms like Vercel or Netlify.
 
 ---
 
@@ -38,13 +38,13 @@
 - **TypeScript** – static typing for scalable codebases.
 - **React** – component-based UI architecture.
 - **Tailwind CSS** – utility-first styling for rapid UI development.
-- **shadcn-ui** – out-of-the-box polished UI components.:contentReference[oaicite:2]{index=2}
+- **shadcn-ui** – out-of-the-box polished UI components.
 
 ---
 
 ## Prerequisites
 
-- **Node.js** (including npm or bun)—you can manage versions easily using tools like `nvm`:contentReference[oaicite:3]{index=3}.
+- **Node.js** (including npm or bun)—you can manage versions easily using tools like `nvm`
 
 ---
 
