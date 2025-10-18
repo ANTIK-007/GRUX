@@ -16,6 +16,7 @@ interface Message {
 
 const GruxApp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLicenseModalOpen, setIsLicenseModalOpen] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([
     { id: "1", message: "Tell us about your capability", timestamp: new Date() },
     { id: "2", message: "Analyze quarterly revenue trends", timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000) },
@@ -298,7 +299,13 @@ const GruxApp = () => {
                 </div>
 
                 <p className="text-center text-xs text-slate-500 mt-4">
-                  Grux can make mistakes. Consider checking important information.
+                  Grux can make mistakes. Consider checking important information.{' '}
+                  <button 
+                    onClick={() => setIsLicenseModalOpen(true)}
+                    className="text-blue-400 hover:text-blue-300 underline transition-colors"
+                  >
+                    License
+                  </button>
                 </p>
               </div>
             ) : (
@@ -406,6 +413,64 @@ const GruxApp = () => {
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity"
           onClick={() => setIsSidebarOpen(false)}
         />
+      )}
+
+      {isLicenseModalOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+          onClick={() => setIsLicenseModalOpen(false)}
+        >
+          <div 
+            className="bg-slate-900 border border-white/10 rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sticky top-0 bg-slate-900 border-b border-white/10 p-6 flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-white">MIT License</h2>
+              <button
+                onClick={() => setIsLicenseModalOpen(false)}
+                className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-6 text-slate-300 space-y-4">
+              <p className="text-sm">
+                <strong className="text-white">Copyright (c) 2025 ANTIK MONDAL</strong>
+              </p>
+              
+              <p className="text-sm leading-relaxed">
+                Permission is hereby granted, free of charge, to any person obtaining a copy
+                of this software and associated documentation files (the "Software"), to deal
+                in the Software without restriction, including without limitation the rights
+                to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                copies of the Software, and to permit persons to whom the Software is
+                furnished to do so, subject to the following conditions:
+              </p>
+              
+              <p className="text-sm leading-relaxed">
+                The above copyright notice and this permission notice shall be included in all
+                copies or substantial portions of the Software.
+              </p>
+              
+              <p className="text-sm leading-relaxed text-slate-400">
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                SOFTWARE.
+              </p>
+
+              <div className="pt-4 border-t border-white/10">
+                <p className="text-xs text-slate-500">
+                  This license applies to the Grux application interface and design.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
