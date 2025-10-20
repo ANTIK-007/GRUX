@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Menu, Send, Paperclip, X, MoreHorizontal, Sparkles, Plus, Settings, User, Crown } from "lucide-react";
+import { Menu, Send, Paperclip, X, MoreHorizontal, Sparkles, Plus, Settings, User, Crown, Check, Zap, Briefcase } from "lucide-react";
 
 interface ChatHistoryItem {
   id: string;
@@ -14,9 +14,156 @@ interface Message {
   files?: File[];
 }
 
+// --- New Pricing Component (Moved out for clarity, but kept in the same file) ---
+
+interface PricingTier {
+  name: string;
+  price: string;
+  features: string[];
+  isPopular: boolean;
+  icon: React.ElementType;
+  buttonClass: string;
+}
+
+const pricingTiers: PricingTier[] = [
+  {
+    name: "Basic",
+    price: "$9/mo",
+    features: [
+      "100 AI queries/day",
+      "Standard response speed",
+      "Community support",
+      "5 concurrent chats",
+      "3 file uploads/query (max 10MB)"
+    ],
+    isPopular: false,
+    icon: User,
+    buttonClass: "bg-slate-700 hover:bg-slate-600",
+  },
+  {
+    name: "Advanced",
+    price: "$29/mo",
+    features: [
+      "Unlimited AI queries",
+      "Fastest response speed (Priority)",
+      "Priority email support",
+      "10 concurrent chats",
+      "10 file uploads/query (max 50MB)",
+      "Advanced data analysis tools",
+      "Exclusive Pro models"
+    ],
+    isPopular: true,
+    icon: Zap,
+    buttonClass: "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500",
+  },
+  {
+    name: "Enterprise",
+    price: "Custom",
+    features: [
+      "Dedicated AI instance",
+      "On-premise deployment option",
+      "SLA-backed uptime guarantee",
+      "Dedicated account manager",
+      "Advanced security & compliance",
+      "Unlimited file uploads (max 500MB)",
+      "Single Sign-On (SSO)"
+    ],
+    isPopular: false,
+    icon: Briefcase,
+    buttonClass: "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400",
+  },
+];
+
+const PricingModal = ({ onClose }: { onClose: () => void }) => {
+  return (
+    <div
+      className="fixed inset-0 bg-black/80 backdrop-blur-md z-[60] flex items-center justify-center p-6"
+      onClick={onClose}
+    >
+      <div
+        className="bg-slate-900 border border-white/10 rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all scale-100 duration-300"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="sticky top-0 bg-slate-900 border-b border-white/10 p-6 flex flex-col sm:flex-row items-center justify-between">
+          <h2 className="text-3xl font-extrabold text-white mb-2 sm:mb-0">
+            Choose Your <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Grux Pro</span> Plan
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        <div className="p-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {pricingTiers.map((tier) => (
+            <div
+              key={tier.name}
+              className={`p-6 rounded-xl border-2 ${
+                tier.isPopular ? 'border-purple-500 bg-slate-800/70 shadow-2xl shadow-purple-500/10' : 'border-white/5 bg-slate-800/50'
+              } transition-all hover:scale-[1.02]`}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <tier.icon className={`w-6 h-6 ${tier.isPopular ? 'text-purple-400' : 'text-slate-400'}`} />
+                  <h3 className="text-2xl font-bold text-white">{tier.name}</h3>
+                </div>
+                {tier.isPopular && (
+                  <span className="text-xs font-semibold px-3 py-1 rounded-full bg-purple-600 text-white">
+                    Most Popular
+                  </span>
+                )}
+              </div>
+
+              <p className="text-5xl font-extrabold text-white">
+                {tier.price}
+                {tier.price !== 'Custom' && (
+                    <span className="text-lg font-medium text-slate-400">/mo</span>
+                )}
+              </p>
+              <p className="text-sm text-slate-400 mb-6 mt-1">
+                {tier.name === "Basic" && "The essential toolset for individuals."}
+                {tier.name === "Advanced" && "Unleash Grux's full potential for power users."}
+                {tier.name === "Enterprise" && "Custom solutions for large organizations."}
+              </p>
+
+              <div className="space-y-3 mb-8">
+                {tier.features.map((feature, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-slate-300 leading-relaxed">{feature}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                className={`w-full py-3 px-4 ${tier.buttonClass} text-white text-md font-bold rounded-lg transition-all shadow-md ${
+                    tier.isPopular ? 'shadow-purple-500/20' : 'shadow-none'
+                }`}
+                onClick={() => alert(`Initiating checkout for ${tier.name}`)}
+              >
+                {tier.price === 'Custom' ? 'Contact Sales' : 'Get Started'}
+              </button>
+            </div>
+          ))}
+        </div>
+        <div className="p-4 text-center border-t border-white/10">
+            <p className="text-xs text-slate-500">All plans come with a 7-day money-back guarantee.</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+// --- GruxApp Component ---
+
 const GruxApp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLicenseModalOpen, setIsLicenseModalOpen] = useState(false);
+  // NEW STATE: For the Pricing Modal
+  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false); 
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([
     { id: "1", message: "Tell us about your capability", timestamp: new Date() },
     { id: "2", message: "Analyze quarterly revenue trends", timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000) },
@@ -169,7 +316,7 @@ const GruxApp = () => {
             {renderChatGroup("Yesterday", grouped.yesterday)}
             {renderChatGroup("Last 3 Days", grouped.last3Days)}
             {renderChatGroup("Last 7 Days", grouped.last7Days)}
-            {grouped.older.length > 0 && renderChatGroup("January 2025", grouped.older)}
+            {grouped.older.length > 0 && renderChatGroup("Older Chats", grouped.older)}
           </div>
 
           <div className="p-4 border-t border-white/5">
@@ -183,7 +330,11 @@ const GruxApp = () => {
                 <p className="text-xs text-slate-300 mb-3 leading-relaxed">
                   Unlock advanced features, faster responses, and priority support
                 </p>
-                <button className="w-full py-2 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-amber-500/20">
+                {/* MODIFIED: Open Pricing Modal */}
+                <button 
+                  onClick={() => setIsPricingModalOpen(true)}
+                  className="w-full py-2 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-amber-500/20"
+                >
                   Upgrade Now
                 </button>
               </div>
@@ -223,6 +374,7 @@ const GruxApp = () => {
         <div className="px-6 py-8">
           <div className="max-w-4xl mx-auto">
             {messages.length === 0 ? (
+              // Empty State UI
               <div>
                 <div className="text-center mb-12 mt-8">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 mb-6 shadow-xl shadow-blue-500/20">
@@ -252,6 +404,7 @@ const GruxApp = () => {
                   ))}
                 </div>
 
+                {/* Input Area when chat is empty (Duplicated logic from below to keep it here, could be refactored) */}
                 {attachedFiles.length > 0 && (
                   <div className="mb-4 flex flex-wrap gap-2">
                     {attachedFiles.map((file, index) => (
@@ -319,7 +472,9 @@ const GruxApp = () => {
                   </button>
                 </p>
               </div>
+
             ) : (
+              // Active Chat UI
               <div>
                 <div className="space-y-6 mb-6">
                   {messages.map((msg) => (
@@ -356,6 +511,7 @@ const GruxApp = () => {
                   )}
                 </div>
 
+                {/* Input Area when chat is active */}
                 {attachedFiles.length > 0 && (
                   <div className="mb-4 flex flex-wrap gap-2">
                     {attachedFiles.map((file, index) => (
@@ -426,6 +582,7 @@ const GruxApp = () => {
         />
       )}
 
+      {/* License Modal */}
       {isLicenseModalOpen && (
         <div 
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-6"
@@ -482,6 +639,11 @@ const GruxApp = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* NEW: Pricing Modal */}
+      {isPricingModalOpen && (
+        <PricingModal onClose={() => setIsPricingModalOpen(false)} />
       )}
     </div>
   );
