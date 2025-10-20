@@ -62,6 +62,13 @@ const GruxApp = () => {
     }, 1500);
   };
 
+    const handleNewChat = () => {
+    setMessages([]);
+    setMessage("");
+    setAttachedFiles([]);
+    setIsSidebarOpen(false);
+  };
+
   const handleSubmit = () => {
     if (!message.trim() && attachedFiles.length === 0) return;
     handleSendMessage(message);
@@ -105,15 +112,16 @@ const GruxApp = () => {
         <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-2">{title}</h3>
         <div className="space-y-1">
           {chats.map((chat) => (
-            <button
-              key={chat.id}
-              className="w-full flex items-center justify-between p-3 rounded-lg bg-transparent hover:bg-white/5 cursor-pointer transition-all group text-left"
-            >
-              <span className="text-sm text-slate-300 truncate flex-1 mr-2 group-hover:text-white transition-colors">
-                {chat.message}
-              </span>
-              <MoreHorizontal className="w-4 h-4 text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </button>
+          <button
+            key={chat.id}
+            onClick={handleNewChat}
+            className="w-full flex items-center justify-between p-3 rounded-lg bg-transparent hover:bg-white/5 cursor-pointer transition-all group text-left"
+          >
+            <span className="text-sm text-slate-300 truncate flex-1 mr-2 group-hover:text-white transition-colors">
+              {chat.message}
+            </span>
+            <MoreHorizontal className="w-4 h-4 text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+          </button>
           ))}
         </div>
       </div>
@@ -136,22 +144,25 @@ const GruxApp = () => {
 
       {isSidebarOpen && (
         <div className="fixed left-0 top-0 h-full w-80 bg-slate-900/95 backdrop-blur-xl border-r border-white/5 z-50 flex flex-col">
-          <div className="flex items-center justify-between p-6 border-b border-white/5">
-            <h2 className="text-lg font-semibold text-white">Chat History</h2>
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
+        <div className="flex items-center justify-between p-6 border-b border-white/5">
+          <h2 className="text-lg font-semibold text-white">Chat History</h2>
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
 
-          <div className="p-4 border-b border-white/5">
-            <button className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium transition-all shadow-lg shadow-blue-500/20">
-              <Plus className="w-4 h-4" />
-              New Chat
-            </button>
-          </div>
+        <div className="p-4 border-b border-white/5">
+          <button 
+            onClick={handleNewChat}
+            className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium transition-all shadow-lg shadow-blue-500/20"
+          >
+            <Plus className="w-4 h-4" />
+            New Chat
+          </button>
+        </div>
 
           <div className="flex-1 p-4 overflow-y-auto">
             {renderChatGroup("Today", grouped.today)}
