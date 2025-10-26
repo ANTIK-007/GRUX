@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Menu, Send, Paperclip, X, MoreHorizontal, Sparkles, Plus, Settings, User, Crown, Bell, Lock, Palette, Globe, Zap, Moon, Sun, Monitor, Check, Briefcase } from "lucide-react";
+import { Menu, Send, Paperclip, X, MoreHorizontal, Sparkles, Plus, Settings, User, Crown, Bell, Lock, Palette, Globe, Zap, Moon, Sun, Monitor, Check, Briefcase, Shield } from "lucide-react";
 
 interface ChatHistoryItem {
   id: string;
@@ -197,12 +197,23 @@ const GruxApp = () => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Settings state
+  const [userName, setUserName] = useState('John Doe');
+  const [userEmail, setUserEmail] = useState('john.doe@example.com');
   const [theme, setTheme] = useState<'dark' | 'light' | 'auto'>('dark');
   const [language, setLanguage] = useState('english');
   const [notifications, setNotifications] = useState(true);
+  const [emailNotifications, setEmailNotifications] = useState(true);
+  const [desktopNotifications, setDesktopNotifications] = useState(true);
   const [soundEffects, setSoundEffects] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
+  const [twoFactorAuth, setTwoFactorAuth] = useState(false);
+  const [biometricAuth, setBiometricAuth] = useState(false);
+  const [saveHistory, setSaveHistory] = useState(true);
   const [dataSharing, setDataSharing] = useState(false);
+  const [analyticsData, setAnalyticsData] = useState(false);
+  const [parentalControl, setParentalControl] = useState(false);
+  const [contentFilter, setContentFilter] = useState('moderate');
 
   const handleSendMessage = (msg: string) => {
     const newChat: ChatHistoryItem = {
@@ -392,7 +403,51 @@ const GruxApp = () => {
               </button>
             </div>
 
-            <div className="p-6 overflow-y-auto max-h-[calc(90vh-100px)]">
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+              {/* Profile Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <User className="w-5 h-5 text-indigo-400" />
+                  <h3 className="text-lg font-semibold text-white">Profile</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Display Name</label>
+                    <input
+                      type="text"
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      placeholder="Enter your name"
+                    />
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Email Address</label>
+                    <input
+                      type="email"
+                      value={userEmail}
+                      onChange={(e) => setUserEmail(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Change Password</h4>
+                        <p className="text-xs text-slate-400">Update your account password</p>
+                      </div>
+                      <button 
+                        onClick={() => alert('Password change dialog would open here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Change
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Appearance Section */}
               <div className="mb-8">
                 <div className="flex items-center gap-2 mb-4">
@@ -464,6 +519,18 @@ const GruxApp = () => {
                     onChange={setNotifications}
                   />
                   <ToggleSetting
+                    label="Email Notifications"
+                    description="Get important updates via email"
+                    checked={emailNotifications}
+                    onChange={setEmailNotifications}
+                  />
+                  <ToggleSetting
+                    label="Desktop Notifications"
+                    description="Show notifications on your desktop"
+                    checked={desktopNotifications}
+                    onChange={setDesktopNotifications}
+                  />
+                  <ToggleSetting
                     label="Sound Effects"
                     description="Play sounds for new messages and interactions"
                     checked={soundEffects}
@@ -488,44 +555,189 @@ const GruxApp = () => {
                 </div>
               </div>
 
-              {/* Privacy Section */}
+              {/* Privacy & Security Section */}
               <div className="mb-8">
                 <div className="flex items-center gap-2 mb-4">
-                  <Lock className="w-5 h-5 text-red-400" />
+                  <Shield className="w-5 h-5 text-red-400" />
                   <h3 className="text-lg font-semibold text-white">Privacy & Security</h3>
                 </div>
                 <div className="space-y-3">
+                  <ToggleSetting
+                    label="Two-Factor Authentication"
+                    description="Add an extra layer of security to your account"
+                    checked={twoFactorAuth}
+                    onChange={setTwoFactorAuth}
+                  />
+                  <ToggleSetting
+                    label="Biometric Authentication"
+                    description="Use fingerprint or face recognition to log in"
+                    checked={biometricAuth}
+                    onChange={setBiometricAuth}
+                  />
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Active Sessions</h4>
+                        <p className="text-xs text-slate-400">Manage devices connected to your account</p>
+                      </div>
+                      <button 
+                        onClick={() => alert('Active sessions list would appear here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        View
+                      </button>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Blocked Users</h4>
+                        <p className="text-xs text-slate-400">Manage your blocked users list</p>
+                      </div>
+                      <button 
+                        onClick={() => alert('Blocked users list would appear here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Manage
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Data Control Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Lock className="w-5 h-5 text-purple-400" />
+                  <h3 className="text-lg font-semibold text-white">Data Control</h3>
+                </div>
+                <div className="space-y-3">
+                  <ToggleSetting
+                    label="Save Chat History"
+                    description="Store your conversations for future reference"
+                    checked={saveHistory}
+                    onChange={setSaveHistory}
+                  />
                   <ToggleSetting
                     label="Data Sharing"
                     description="Share anonymized data to help improve Grux"
                     checked={dataSharing}
                     onChange={setDataSharing}
                   />
+                  <ToggleSetting
+                    label="Usage Analytics"
+                    description="Help us improve by sharing usage patterns"
+                    checked={analyticsData}
+                    onChange={setAnalyticsData}
+                  />
                   <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <button className="w-full text-left">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="text-sm font-medium text-white mb-1">Clear Chat History</h4>
-                          <p className="text-xs text-slate-400">Delete all your conversation history</p>
-                        </div>
-                        <button className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all">
-                          Clear
-                        </button>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Download Your Data</h4>
+                        <p className="text-xs text-slate-400">Get a copy of all your information</p>
                       </div>
-                    </button>
+                      <button 
+                        onClick={() => alert('Data download would start here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Download
+                      </button>
+                    </div>
                   </div>
                   <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <button className="w-full text-left">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="text-sm font-medium text-white mb-1">Export Data</h4>
-                          <p className="text-xs text-slate-400">Download a copy of your data</p>
-                        </div>
-                        <button className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all">
-                          Export
-                        </button>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Clear Chat History</h4>
+                        <p className="text-xs text-slate-400">Delete all your conversation history</p>
                       </div>
-                    </button>
+                      <button 
+                        onClick={() => {
+                          if (confirm('Are you sure you want to clear all chat history?')) {
+                            alert('Chat history cleared');
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Delete Account</h4>
+                        <p className="text-xs text-slate-400">Permanently delete your account and all data</p>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          if (confirm('Are you sure? This action cannot be undone!')) {
+                            alert('Account deletion process initiated');
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Parental Control Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Shield className="w-5 h-5 text-yellow-400" />
+                  <h3 className="text-lg font-semibold text-white">Parental Control</h3>
+                </div>
+                <div className="space-y-3">
+                  <ToggleSetting
+                    label="Enable Parental Control"
+                    description="Restrict content and features for younger users"
+                    checked={parentalControl}
+                    onChange={setParentalControl}
+                  />
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Content Filter Level</label>
+                    <select
+                      value={contentFilter}
+                      onChange={(e) => setContentFilter(e.target.value)}
+                      disabled={!parentalControl}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <option value="strict">Strict - Maximum filtering</option>
+                      <option value="moderate">Moderate - Balanced filtering</option>
+                      <option value="light">Light - Minimal filtering</option>
+                    </select>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Time Limits</h4>
+                        <p className="text-xs text-slate-400">Set daily usage limits</p>
+                      </div>
+                      <button 
+                        disabled={!parentalControl}
+                        onClick={() => alert('Time limits configuration would appear here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Configure
+                      </button>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Activity Report</h4>
+                        <p className="text-xs text-slate-400">View usage statistics and history</p>
+                      </div>
+                      <button 
+                        disabled={!parentalControl}
+                        onClick={() => alert('Activity report would be displayed here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        View Report
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
