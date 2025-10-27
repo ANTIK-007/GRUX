@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Menu, Send, Paperclip, X, MoreHorizontal, Sparkles, Plus, Settings, User, Crown, Check, Zap, Briefcase } from "lucide-react";
+import { Menu, Send, Paperclip, X, MoreHorizontal, Sparkles, Plus, Settings, User, Crown, Bell, Lock, Palette, Globe, Zap, Moon, Sun, Monitor, Check, Briefcase, Shield } from "lucide-react";
 
 interface ChatHistoryItem {
   id: string;
@@ -13,8 +13,6 @@ interface Message {
   content: string;
   files?: File[];
 }
-
-// --- New Pricing Component (Moved out for clarity, but kept in the same file) ---
 
 interface PricingTier {
   name: string;
@@ -156,14 +154,36 @@ const PricingModal = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-
-// --- GruxApp Component ---
+const ToggleSetting = ({ label, description, checked, onChange }: any) => {
+  return (
+    <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+      <div className="flex items-center justify-between">
+        <div className="flex-1">
+          <h4 className="text-sm font-medium text-white mb-1">{label}</h4>
+          <p className="text-xs text-slate-400">{description}</p>
+        </div>
+        <button
+          onClick={() => onChange(!checked)}
+          className={`relative w-12 h-6 rounded-full transition-all ${
+            checked ? 'bg-gradient-to-r from-blue-500 to-purple-500' : 'bg-slate-700'
+          }`}
+        >
+          <div
+            className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all shadow-lg ${
+              checked ? 'right-1' : 'left-1'
+            }`}
+          />
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const GruxApp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [isLicenseModalOpen, setIsLicenseModalOpen] = useState(false);
-  // NEW STATE: For the Pricing Modal
-  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false); 
+  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([
     { id: "1", message: "Tell us about your capability", timestamp: new Date() },
     { id: "2", message: "Analyze quarterly revenue trends", timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000) },
@@ -176,6 +196,24 @@ const GruxApp = () => {
   const [message, setMessage] = useState("");
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Settings state
+  const [userName, setUserName] = useState('John Doe');
+  const [userEmail, setUserEmail] = useState('john.doe@example.com');
+  const [theme, setTheme] = useState<'dark' | 'light' | 'auto'>('dark');
+  const [language, setLanguage] = useState('english');
+  const [notifications, setNotifications] = useState(true);
+  const [emailNotifications, setEmailNotifications] = useState(true);
+  const [desktopNotifications, setDesktopNotifications] = useState(true);
+  const [soundEffects, setSoundEffects] = useState(true);
+  const [autoSave, setAutoSave] = useState(true);
+  const [twoFactorAuth, setTwoFactorAuth] = useState(false);
+  const [biometricAuth, setBiometricAuth] = useState(false);
+  const [saveHistory, setSaveHistory] = useState(true);
+  const [dataSharing, setDataSharing] = useState(false);
+  const [analyticsData, setAnalyticsData] = useState(false);
+  const [parentalControl, setParentalControl] = useState(false);
+  const [contentFilter, setContentFilter] = useState('moderate');
 
   const handleSendMessage = (msg: string) => {
     const newChat: ChatHistoryItem = {
@@ -209,7 +247,7 @@ const GruxApp = () => {
     }, 1500);
   };
 
-    const handleNewChat = () => {
+  const handleNewChat = () => {
     setMessages([]);
     setMessage("");
     setAttachedFiles([]);
@@ -259,16 +297,16 @@ const GruxApp = () => {
         <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-2">{title}</h3>
         <div className="space-y-1">
           {chats.map((chat) => (
-          <button
-            key={chat.id}
-            onClick={handleNewChat}
-            className="w-full flex items-center justify-between p-3 rounded-lg bg-transparent hover:bg-white/5 cursor-pointer transition-all group text-left"
-          >
-            <span className="text-sm text-slate-300 truncate flex-1 mr-2 group-hover:text-white transition-colors">
-              {chat.message}
-            </span>
-            <MoreHorizontal className="w-4 h-4 text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-          </button>
+            <button
+              key={chat.id}
+              onClick={handleNewChat}
+              className="w-full flex items-center justify-between p-3 rounded-lg bg-transparent hover:bg-white/5 cursor-pointer transition-all group text-left"
+            >
+              <span className="text-sm text-slate-300 truncate flex-1 mr-2 group-hover:text-white transition-colors">
+                {chat.message}
+              </span>
+              <MoreHorizontal className="w-4 h-4 text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </button>
           ))}
         </div>
       </div>
@@ -289,27 +327,28 @@ const GruxApp = () => {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
       </div>
 
+      {/* Sidebar */}
       {isSidebarOpen && (
         <div className="fixed left-0 top-0 h-full w-80 bg-slate-900/95 backdrop-blur-xl border-r border-white/5 z-50 flex flex-col">
-        <div className="flex items-center justify-between p-6 border-b border-white/5">
-          <h2 className="text-lg font-semibold text-white">Chat History</h2>
-          <button
-            onClick={() => setIsSidebarOpen(false)}
-            className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
+          <div className="flex items-center justify-between p-6 border-b border-white/5">
+            <h2 className="text-lg font-semibold text-white">Chat History</h2>
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
 
-        <div className="p-4 border-b border-white/5">
-          <button 
-            onClick={handleNewChat}
-            className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium transition-all shadow-lg shadow-blue-500/20"
-          >
-            <Plus className="w-4 h-4" />
-            New Chat
-          </button>
-        </div>
+          <div className="p-4 border-b border-white/5">
+            <button 
+              onClick={handleNewChat}
+              className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium transition-all shadow-lg shadow-blue-500/20"
+            >
+              <Plus className="w-4 h-4" />
+              New Chat
+            </button>
+          </div>
 
           <div className="flex-1 p-4 overflow-y-auto">
             {renderChatGroup("Today", grouped.today)}
@@ -330,12 +369,418 @@ const GruxApp = () => {
                 <p className="text-xs text-slate-300 mb-3 leading-relaxed">
                   Unlock advanced features, faster responses, and priority support
                 </p>
-                {/* MODIFIED: Open Pricing Modal */}
                 <button 
                   onClick={() => setIsPricingModalOpen(true)}
                   className="w-full py-2 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-amber-500/20"
                 >
                   Upgrade Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Settings Panel */}
+      {showSettings && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden shadow-2xl">
+            <div className="flex items-center justify-between p-6 border-b border-white/5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                  <Settings className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">Settings</h2>
+                  <p className="text-sm text-slate-400">Customize your Grux experience</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowSettings(false)}
+                className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+              {/* Profile Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <User className="w-5 h-5 text-indigo-400" />
+                  <h3 className="text-lg font-semibold text-white">Profile</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Display Name</label>
+                    <input
+                      type="text"
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      placeholder="Enter your name"
+                    />
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Email Address</label>
+                    <input
+                      type="email"
+                      value={userEmail}
+                      onChange={(e) => setUserEmail(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Change Password</h4>
+                        <p className="text-xs text-slate-400">Update your account password</p>
+                      </div>
+                      <button 
+                        onClick={() => alert('Password change dialog would open here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Change
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Appearance Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Palette className="w-5 h-5 text-blue-400" />
+                  <h3 className="text-lg font-semibold text-white">Appearance</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-3 block">Theme</label>
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        { value: 'light', icon: Sun, label: 'Light' },
+                        { value: 'dark', icon: Moon, label: 'Dark' },
+                        { value: 'auto', icon: Monitor, label: 'Auto' }
+                      ].map((opt) => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setTheme(opt.value as any)}
+                          className={`flex flex-col items-center gap-2 p-4 rounded-lg border transition-all ${
+                            theme === opt.value
+                              ? 'bg-blue-500/20 border-blue-500/50 text-blue-400'
+                              : 'bg-slate-800/50 border-white/5 text-slate-400 hover:border-white/10'
+                          }`}
+                        >
+                          <opt.icon className="w-5 h-5" />
+                          <span className="text-sm font-medium">{opt.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* General Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Globe className="w-5 h-5 text-purple-400" />
+                  <h3 className="text-lg font-semibold text-white">General</h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Language</label>
+                    <select
+                      value={language}
+                      onChange={(e) => setLanguage(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                    >
+                      <option value="english">English</option>
+                      <option value="spanish">Spanish</option>
+                      <option value="french">French</option>
+                      <option value="german">German</option>
+                      <option value="japanese">Japanese</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notifications Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Bell className="w-5 h-5 text-green-400" />
+                  <h3 className="text-lg font-semibold text-white">Notifications</h3>
+                </div>
+                <div className="space-y-3">
+                  <ToggleSetting
+                    label="Push Notifications"
+                    description="Receive notifications about new messages and updates"
+                    checked={notifications}
+                    onChange={setNotifications}
+                  />
+                  <ToggleSetting
+                    label="Email Notifications"
+                    description="Get important updates via email"
+                    checked={emailNotifications}
+                    onChange={setEmailNotifications}
+                  />
+                  <ToggleSetting
+                    label="Desktop Notifications"
+                    description="Show notifications on your desktop"
+                    checked={desktopNotifications}
+                    onChange={setDesktopNotifications}
+                  />
+                  <ToggleSetting
+                    label="Sound Effects"
+                    description="Play sounds for new messages and interactions"
+                    checked={soundEffects}
+                    onChange={setSoundEffects}
+                  />
+                </div>
+              </div>
+
+              {/* Advanced Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Zap className="w-5 h-5 text-yellow-400" />
+                  <h3 className="text-lg font-semibold text-white">Advanced</h3>
+                </div>
+                <div className="space-y-3">
+                  <ToggleSetting
+                    label="Auto-save Chats"
+                    description="Automatically save your conversation history"
+                    checked={autoSave}
+                    onChange={setAutoSave}
+                  />
+                </div>
+              </div>
+
+              {/* Privacy & Security Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Shield className="w-5 h-5 text-red-400" />
+                  <h3 className="text-lg font-semibold text-white">Privacy & Security</h3>
+                </div>
+                <div className="space-y-3">
+                  <ToggleSetting
+                    label="Two-Factor Authentication"
+                    description="Add an extra layer of security to your account"
+                    checked={twoFactorAuth}
+                    onChange={setTwoFactorAuth}
+                  />
+                  <ToggleSetting
+                    label="Biometric Authentication"
+                    description="Use fingerprint or face recognition to log in"
+                    checked={biometricAuth}
+                    onChange={setBiometricAuth}
+                  />
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Active Sessions</h4>
+                        <p className="text-xs text-slate-400">Manage devices connected to your account</p>
+                      </div>
+                      <button 
+                        onClick={() => alert('Active sessions list would appear here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        View
+                      </button>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Blocked Users</h4>
+                        <p className="text-xs text-slate-400">Manage your blocked users list</p>
+                      </div>
+                      <button 
+                        onClick={() => alert('Blocked users list would appear here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Manage
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Data Control Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Lock className="w-5 h-5 text-purple-400" />
+                  <h3 className="text-lg font-semibold text-white">Data Control</h3>
+                </div>
+                <div className="space-y-3">
+                  <ToggleSetting
+                    label="Save Chat History"
+                    description="Store your conversations for future reference"
+                    checked={saveHistory}
+                    onChange={setSaveHistory}
+                  />
+                  <ToggleSetting
+                    label="Data Sharing"
+                    description="Share anonymized data to help improve Grux"
+                    checked={dataSharing}
+                    onChange={setDataSharing}
+                  />
+                  <ToggleSetting
+                    label="Usage Analytics"
+                    description="Help us improve by sharing usage patterns"
+                    checked={analyticsData}
+                    onChange={setAnalyticsData}
+                  />
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Download Your Data</h4>
+                        <p className="text-xs text-slate-400">Get a copy of all your information</p>
+                      </div>
+                      <button 
+                        onClick={() => alert('Data download would start here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Download
+                      </button>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Clear Chat History</h4>
+                        <p className="text-xs text-slate-400">Delete all your conversation history</p>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          if (confirm('Are you sure you want to clear all chat history?')) {
+                            alert('Chat history cleared');
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Delete Account</h4>
+                        <p className="text-xs text-slate-400">Permanently delete your account and all data</p>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          if (confirm('Are you sure? This action cannot be undone!')) {
+                            alert('Account deletion process initiated');
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Parental Control Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Shield className="w-5 h-5 text-yellow-400" />
+                  <h3 className="text-lg font-semibold text-white">Parental Control</h3>
+                </div>
+                <div className="space-y-3">
+                  <ToggleSetting
+                    label="Enable Parental Control"
+                    description="Restrict content and features for younger users"
+                    checked={parentalControl}
+                    onChange={setParentalControl}
+                  />
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Content Filter Level</label>
+                    <select
+                      value={contentFilter}
+                      onChange={(e) => setContentFilter(e.target.value)}
+                      disabled={!parentalControl}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <option value="strict">Strict - Maximum filtering</option>
+                      <option value="moderate">Moderate - Balanced filtering</option>
+                      <option value="light">Light - Minimal filtering</option>
+                    </select>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Time Limits</h4>
+                        <p className="text-xs text-slate-400">Set daily usage limits</p>
+                      </div>
+                      <button 
+                        disabled={!parentalControl}
+                        onClick={() => alert('Time limits configuration would appear here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Configure
+                      </button>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Activity Report</h4>
+                        <p className="text-xs text-slate-400">View usage statistics and history</p>
+                      </div>
+                      <button 
+                        disabled={!parentalControl}
+                        onClick={() => alert('Activity report would be displayed here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        View Report
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Account Section */}
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <User className="w-5 h-5 text-indigo-400" />
+                  <h3 className="text-lg font-semibold text-white">Account</h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Account Status</h4>
+                        <p className="text-xs text-slate-400">Free Plan</p>
+                      </div>
+                      <span className="px-3 py-1 bg-blue-500/20 border border-blue-500/50 text-blue-400 text-xs font-medium rounded-full">
+                        Active
+                      </span>
+                    </div>
+                    <button 
+                      onClick={() => {
+                        setShowSettings(false);
+                        setIsPricingModalOpen(true);
+                      }}
+                      className="w-full py-2 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-amber-500/20"
+                    >
+                      Upgrade to Pro
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-white/5 bg-slate-900/50">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-slate-500">Changes are saved automatically</p>
+                <button
+                  onClick={() => setShowSettings(false)}
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium rounded-lg transition-all shadow-lg shadow-blue-500/20"
+                >
+                  Done
                 </button>
               </div>
             </div>
@@ -361,7 +806,10 @@ const GruxApp = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all">
+              <button 
+                onClick={() => setShowSettings(true)}
+                className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all"
+              >
                 <Settings className="w-5 h-5" />
               </button>
               <button className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all">
@@ -374,7 +822,6 @@ const GruxApp = () => {
         <div className="px-6 py-8">
           <div className="max-w-4xl mx-auto">
             {messages.length === 0 ? (
-              // Empty State UI
               <div>
                 <div className="text-center mb-12 mt-8">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 mb-6 shadow-xl shadow-blue-500/20">
@@ -404,7 +851,6 @@ const GruxApp = () => {
                   ))}
                 </div>
 
-                {/* Input Area when chat is empty (Duplicated logic from below to keep it here, could be refactored) */}
                 {attachedFiles.length > 0 && (
                   <div className="mb-4 flex flex-wrap gap-2">
                     {attachedFiles.map((file, index) => (
@@ -472,9 +918,7 @@ const GruxApp = () => {
                   </button>
                 </p>
               </div>
-
             ) : (
-              // Active Chat UI
               <div>
                 <div className="space-y-6 mb-6">
                   {messages.map((msg) => (
@@ -511,7 +955,6 @@ const GruxApp = () => {
                   )}
                 </div>
 
-                {/* Input Area when chat is active */}
                 {attachedFiles.length > 0 && (
                   <div className="mb-4 flex flex-wrap gap-2">
                     {attachedFiles.map((file, index) => (
@@ -641,7 +1084,7 @@ const GruxApp = () => {
         </div>
       )}
 
-      {/* NEW: Pricing Modal */}
+      {/* Pricing Modal */}
       {isPricingModalOpen && (
         <PricingModal onClose={() => setIsPricingModalOpen(false)} />
       )}
