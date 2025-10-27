@@ -184,6 +184,7 @@ const GruxApp = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [isLicenseModalOpen, setIsLicenseModalOpen] = useState(false);
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([
     { id: "1", message: "Tell us about your capability", timestamp: new Date() },
     { id: "2", message: "Analyze quarterly revenue trends", timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000) },
@@ -200,6 +201,10 @@ const GruxApp = () => {
   // Settings state
   const [userName, setUserName] = useState('John Doe');
   const [userEmail, setUserEmail] = useState('john.doe@example.com');
+  const [userBio, setUserBio] = useState('AI enthusiast and creative thinker');
+  const [userPhone, setUserPhone] = useState('+1 (555) 123-4567');
+  const [userLocation, setUserLocation] = useState('San Francisco, CA');
+  const [userWebsite, setUserWebsite] = useState('https://johndoe.com');
   const [theme, setTheme] = useState<'dark' | 'light' | 'auto'>('dark');
   const [language, setLanguage] = useState('english');
   const [notifications, setNotifications] = useState(true);
@@ -374,6 +379,274 @@ const GruxApp = () => {
                   className="w-full py-2 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-amber-500/20"
                 >
                   Upgrade Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Profile Modal */}
+      {showProfile && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl">
+            <div className="flex items-center justify-between p-6 border-b border-white/5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                  <User className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">Profile</h2>
+                  <p className="text-sm text-slate-400">Manage your personal information</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowProfile(false)}
+                className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+              {/* Profile Header */}
+              <div className="mb-8 text-center">
+                <div className="relative inline-block mb-4">
+                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold shadow-xl">
+                    {userName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  </div>
+                  <button className="absolute bottom-0 right-0 w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center shadow-lg transition-all">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </button>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-1">{userName}</h3>
+                <p className="text-slate-400 text-sm">{userEmail}</p>
+              </div>
+
+              {/* Account Information */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <User className="w-5 h-5 text-blue-400" />
+                  Account Information
+                </h3>
+                <div className="space-y-4">
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Full Name</label>
+                    <input
+                      type="text"
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      placeholder="Enter your full name"
+                    />
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Email Address</label>
+                    <input
+                      type="email"
+                      value={userEmail}
+                      onChange={(e) => setUserEmail(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Phone Number</label>
+                    <input
+                      type="tel"
+                      value={userPhone}
+                      onChange={(e) => setUserPhone(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      placeholder="Enter your phone number"
+                    />
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Location</label>
+                    <input
+                      type="text"
+                      value={userLocation}
+                      onChange={(e) => setUserLocation(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      placeholder="Enter your location"
+                    />
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Website</label>
+                    <input
+                      type="url"
+                      value={userWebsite}
+                      onChange={(e) => setUserWebsite(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      placeholder="Enter your website"
+                    />
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Bio</label>
+                    <textarea
+                      value={userBio}
+                      onChange={(e) => setUserBio(e.target.value)}
+                      rows={4}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all resize-none"
+                      placeholder="Tell us about yourself"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Usage Statistics */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-yellow-400" />
+                  Usage Statistics
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-white">247</p>
+                        <p className="text-xs text-slate-400">Total Chats</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-white">1,432</p>
+                        <p className="text-xs text-slate-400">AI Queries</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-white">45h</p>
+                        <p className="text-xs text-slate-400">Time Saved</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Subscription Details */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Crown className="w-5 h-5 text-amber-400" />
+                  Subscription
+                </h3>
+                <div className="bg-gradient-to-br from-slate-800/50 to-slate-800/30 border border-white/5 rounded-xl p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <p className="text-sm text-slate-400 mb-1">Current Plan</p>
+                      <p className="text-2xl font-bold text-white">Free Plan</p>
+                    </div>
+                    <span className="px-4 py-2 bg-blue-500/20 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-full">
+                      Active
+                    </span>
+                  </div>
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-400">Daily Queries</span>
+                      <span className="text-white font-medium">78 / 100</span>
+                    </div>
+                    <div className="w-full bg-slate-700/50 rounded-full h-2">
+                      <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full" style={{ width: '78%' }}></div>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      setShowProfile(false);
+                      setIsPricingModalOpen(true);
+                    }}
+                    className="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-medium rounded-lg transition-all shadow-lg shadow-amber-500/20"
+                  >
+                    Upgrade to Pro
+                  </button>
+                </div>
+              </div>
+
+              {/* Account Actions */}
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-slate-400" />
+                  Account Actions
+                </h3>
+                <div className="space-y-3">
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Change Password</h4>
+                        <p className="text-xs text-slate-400">Update your account password</p>
+                      </div>
+                      <button 
+                        onClick={() => alert('Password change dialog would open here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Change
+                      </button>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Download Data</h4>
+                        <p className="text-xs text-slate-400">Export all your information</p>
+                      </div>
+                      <button 
+                        onClick={() => alert('Data download would start')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Export
+                      </button>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1">Sign Out</h4>
+                        <p className="text-xs text-slate-400">Sign out from your account</p>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          if (confirm('Are you sure you want to sign out?')) {
+                            alert('Signing out...');
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-white/5 bg-slate-900/50">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-slate-500">Member since October 2024</p>
+                <button
+                  onClick={() => setShowProfile(false)}
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium rounded-lg transition-all shadow-lg shadow-blue-500/20"
+                >
+                  Save Changes
                 </button>
               </div>
             </div>
@@ -812,7 +1085,10 @@ const GruxApp = () => {
               >
                 <Settings className="w-5 h-5" />
               </button>
-              <button className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all">
+              <button 
+                onClick={() => setShowProfile(true)}
+                className="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all"
+              >
                 <User className="w-5 h-5" />
               </button>
             </div>
