@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Menu, Send, Paperclip, X, MoreHorizontal, Sparkles, Plus, Settings, User, Crown, Bell, Lock, Palette, Globe, Zap, Moon, Sun, Monitor, Check, Briefcase, Shield } from "lucide-react";
+import { Menu, Send, Paperclip, X, MoreHorizontal, Sparkles, Plus, Settings, User, Crown, Bell, Lock, Palette, Globe, Zap, Moon, Sun, Monitor, Check, Briefcase, Shield, Eye, EyeOff, Download, Trash2, LogOut, Key, Smartphone, Mail, Volume2, VolumeX, Save, RefreshCw, Database, Languages, Clock, MessageSquare, FileText, Image, Video, Code, BarChart, HelpCircle, Info, ExternalLink, ChevronRight, Keyboard, Mic } from "lucide-react";
 
 interface ChatHistoryItem {
   id: string;
@@ -154,19 +154,20 @@ const PricingModal = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-const ToggleSetting = ({ label, description, checked, onChange }: any) => {
+const ToggleSetting = ({ label, description, checked, onChange, disabled = false }: any) => {
   return (
-    <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+    <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4 hover:border-white/10 transition-all">
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <h4 className="text-sm font-medium text-white mb-1">{label}</h4>
           <p className="text-xs text-slate-400">{description}</p>
         </div>
         <button
-          onClick={() => onChange(!checked)}
+          onClick={() => !disabled && onChange(!checked)}
+          disabled={disabled}
           className={`relative w-12 h-6 rounded-full transition-all ${
             checked ? 'bg-gradient-to-r from-blue-500 to-purple-500' : 'bg-slate-700'
-          }`}
+          } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
         >
           <div
             className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all shadow-lg ${
@@ -174,6 +175,22 @@ const ToggleSetting = ({ label, description, checked, onChange }: any) => {
             }`}
           />
         </button>
+      </div>
+    </div>
+  );
+};
+
+const SettingsSection = ({ icon: Icon, title, children, iconColor }: any) => {
+  return (
+    <div className="mb-8">
+      <div className="flex items-center gap-3 mb-5 pb-3 border-b border-white/5">
+        <div className={`w-10 h-10 rounded-lg ${iconColor} flex items-center justify-center`}>
+          <Icon className="w-5 h-5" />
+        </div>
+        <h3 className="text-lg font-semibold text-white">{title}</h3>
+      </div>
+      <div className="space-y-4">
+        {children}
       </div>
     </div>
   );
@@ -198,27 +215,94 @@ const GruxApp = () => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Settings state
+  // Settings state - Account & Profile
   const [userName, setUserName] = useState('John Doe');
   const [userEmail, setUserEmail] = useState('john.doe@example.com');
   const [userBio, setUserBio] = useState('AI enthusiast and creative thinker');
   const [userPhone, setUserPhone] = useState('+1 (555) 123-4567');
   const [userLocation, setUserLocation] = useState('San Francisco, CA');
   const [userWebsite, setUserWebsite] = useState('https://johndoe.com');
+  const [userCompany, setUserCompany] = useState('Tech Innovations Inc.');
+  const [userRole, setUserRole] = useState('Product Manager');
+  
+  // Appearance Settings
   const [theme, setTheme] = useState<'dark' | 'light' | 'auto'>('dark');
+  const [accentColor, setAccentColor] = useState('blue');
+  const [fontSize, setFontSize] = useState('medium');
+  const [messageSpacing, setMessageSpacing] = useState('comfortable');
+  const [codeHighlighting, setCodeHighlighting] = useState(true);
+  const [compactMode, setCompactMode] = useState(false);
+  const [animationsEnabled, setAnimationsEnabled] = useState(true);
+  const [showTimestamps, setShowTimestamps] = useState(true);
+  
+  // Language & Region
   const [language, setLanguage] = useState('english');
+  const [timezone, setTimezone] = useState('America/Los_Angeles');
+  const [dateFormat, setDateFormat] = useState('MM/DD/YYYY');
+  const [timeFormat, setTimeFormat] = useState('12h');
+  
+  // Notifications
   const [notifications, setNotifications] = useState(true);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [desktopNotifications, setDesktopNotifications] = useState(true);
+  const [mobileNotifications, setMobileNotifications] = useState(true);
   const [soundEffects, setSoundEffects] = useState(true);
-  const [autoSave, setAutoSave] = useState(true);
+  const [notificationSound, setNotificationSound] = useState('default');
+  const [vibrationEnabled, setVibrationEnabled] = useState(true);
+  const [doNotDisturb, setDoNotDisturb] = useState(false);
+  const [dndStartTime, setDndStartTime] = useState('22:00');
+  const [dndEndTime, setDndEndTime] = useState('08:00');
+  
+  // AI Behavior
+  const [aiPersonality, setAiPersonality] = useState('professional');
+  const [responseLength, setResponseLength] = useState('balanced');
+  const [creativityLevel, setCreativityLevel] = useState('balanced');
+  const [codeExecution, setCodeExecution] = useState(true);
+  const [webSearch, setWebSearch] = useState(true);
+  const [imageGeneration, setImageGeneration] = useState(true);
+  const [dataAnalysis, setDataAnalysis] = useState(true);
+  const [suggestFollowUps, setSuggestFollowUps] = useState(true);
+  const [contextMemory, setContextMemory] = useState(true);
+  const [autoCorrect, setAutoCorrect] = useState(true);
+  
+  // Privacy & Security
   const [twoFactorAuth, setTwoFactorAuth] = useState(false);
   const [biometricAuth, setBiometricAuth] = useState(false);
+  const [sessionTimeout, setSessionTimeout] = useState('30');
+  const [passwordlessLogin, setPasswordlessLogin] = useState(false);
+  const [encryptionEnabled, setEncryptionEnabled] = useState(true);
   const [saveHistory, setSaveHistory] = useState(true);
   const [dataSharing, setDataSharing] = useState(false);
   const [analyticsData, setAnalyticsData] = useState(false);
-  const [parentalControl, setParentalControl] = useState(false);
-  const [contentFilter, setContentFilter] = useState('moderate');
+  const [thirdPartyAccess, setThirdPartyAccess] = useState(false);
+  const [locationTracking, setLocationTracking] = useState(false);
+  const [autoLogout, setAutoLogout] = useState(true);
+  
+  // Data & Storage
+  const [autoSave, setAutoSave] = useState(true);
+  const [autoBackup, setAutoBackup] = useState(true);
+  const [backupFrequency, setBackupFrequency] = useState('daily');
+  const [cloudSync, setCloudSync] = useState(true);
+  const [compressionEnabled, setCompressionEnabled] = useState(true);
+  const [cacheSize, setCacheSize] = useState('500');
+  
+  // Accessibility
+  const [screenReader, setScreenReader] = useState(false);
+  const [highContrast, setHighContrast] = useState(false);
+  const [keyboardNavigation, setKeyboardNavigation] = useState(true);
+  const [textToSpeech, setTextToSpeech] = useState(false);
+  const [speechToText, setSpeechToText] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [focusIndicators, setFocusIndicators] = useState(true);
+  
+  // Advanced
+  const [developerMode, setDeveloperMode] = useState(false);
+  const [betaFeatures, setBetaFeatures] = useState(false);
+  const [experimentalFeatures, setExperimentalFeatures] = useState(false);
+  const [debugMode, setDebugMode] = useState(false);
+  const [apiAccess, setApiAccess] = useState(false);
+  const [webhooks, setWebhooks] = useState(false);
+  const [customModels, setCustomModels] = useState(false);
 
   const handleSendMessage = (msg: string) => {
     const newChat: ChatHistoryItem = {
@@ -432,64 +516,101 @@ const GruxApp = () => {
                   <User className="w-5 h-5 text-blue-400" />
                   Account Information
                 </h3>
-                <div className="space-y-4">
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+
+                {/* Grid Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Full Name */}
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4 
+                                  transform transition-all duration-300 hover:scale-105 
+                                  hover:shadow-lg hover:border-blue-500/30">
                     <label className="text-sm font-medium text-slate-300 mb-2 block">Full Name</label>
                     <input
                       type="text"
                       value={userName}
                       onChange={(e) => setUserName(e.target.value)}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg 
+                                px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 
+                                transition-all"
                       placeholder="Enter your full name"
                     />
                   </div>
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+
+                  {/* Email Address */}
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4 
+                                  transform transition-all duration-300 hover:scale-105 
+                                  hover:shadow-lg hover:border-blue-500/30">
                     <label className="text-sm font-medium text-slate-300 mb-2 block">Email Address</label>
                     <input
                       type="email"
                       value={userEmail}
                       onChange={(e) => setUserEmail(e.target.value)}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg 
+                                px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 
+                                transition-all"
                       placeholder="Enter your email"
                     />
                   </div>
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+
+                  {/* Phone Number */}
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4 
+                                  transform transition-all duration-300 hover:scale-105 
+                                  hover:shadow-lg hover:border-blue-500/30">
                     <label className="text-sm font-medium text-slate-300 mb-2 block">Phone Number</label>
                     <input
                       type="tel"
                       value={userPhone}
                       onChange={(e) => setUserPhone(e.target.value)}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg 
+                                px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 
+                                transition-all"
                       placeholder="Enter your phone number"
                     />
                   </div>
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+
+                  {/* Location */}
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4 
+                                  transform transition-all duration-300 hover:scale-105 
+                                  hover:shadow-lg hover:border-blue-500/30">
                     <label className="text-sm font-medium text-slate-300 mb-2 block">Location</label>
                     <input
                       type="text"
                       value={userLocation}
                       onChange={(e) => setUserLocation(e.target.value)}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg 
+                                px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 
+                                transition-all"
                       placeholder="Enter your location"
                     />
                   </div>
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+
+                  {/* Website */}
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4 
+                                  transform transition-all duration-300 hover:scale-105 
+                                  hover:shadow-lg hover:border-blue-500/30 md:col-span-2">
                     <label className="text-sm font-medium text-slate-300 mb-2 block">Website</label>
                     <input
                       type="url"
                       value={userWebsite}
                       onChange={(e) => setUserWebsite(e.target.value)}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg 
+                                px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 
+                                transition-all"
                       placeholder="Enter your website"
                     />
                   </div>
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+
+                  {/* Bio (Full width) */}
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4 
+                                  transform transition-all duration-300 hover:scale-105 
+                                  hover:shadow-lg hover:border-blue-500/30 md:col-span-2">
                     <label className="text-sm font-medium text-slate-300 mb-2 block">Bio</label>
                     <textarea
                       value={userBio}
                       onChange={(e) => setUserBio(e.target.value)}
                       rows={4}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all resize-none"
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg 
+                                px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 
+                                transition-all resize-none"
                       placeholder="Tell us about yourself"
                     />
                   </div>
@@ -654,10 +775,10 @@ const GruxApp = () => {
         </div>
       )}
 
-      {/* Settings Panel */}
+      {/* Enhanced Settings Panel */}
       {showSettings && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden shadow-2xl">
+          <div className="bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden shadow-2xl">
             <div className="flex items-center justify-between p-6 border-b border-white/5">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
@@ -677,20 +798,16 @@ const GruxApp = () => {
             </div>
 
             <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-              {/* Profile Section */}
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <User className="w-5 h-5 text-indigo-400" />
-                  <h3 className="text-lg font-semibold text-white">Profile</h3>
-                </div>
-                <div className="space-y-4">
+              {/* Account Section */}
+              <SettingsSection icon={User} title="Account & Profile" iconColor="bg-indigo-500/20 text-indigo-400">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
                     <label className="text-sm font-medium text-slate-300 mb-2 block">Display Name</label>
                     <input
                       type="text"
                       value={userName}
                       onChange={(e) => setUserName(e.target.value)}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
                       placeholder="Enter your name"
                     />
                   </div>
@@ -700,348 +817,844 @@ const GruxApp = () => {
                       type="email"
                       value={userEmail}
                       onChange={(e) => setUserEmail(e.target.value)}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
                       placeholder="Enter your email"
                     />
                   </div>
                   <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-sm font-medium text-white mb-1">Change Password</h4>
-                        <p className="text-xs text-slate-400">Update your account password</p>
-                      </div>
-                      <button 
-                        onClick={() => alert('Password change dialog would open here')}
-                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
-                      >
-                        Change
-                      </button>
-                    </div>
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Company</label>
+                    <input
+                      type="text"
+                      value={userCompany}
+                      onChange={(e) => setUserCompany(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                      placeholder="Your company"
+                    />
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Job Title</label>
+                    <input
+                      type="text"
+                      value={userRole}
+                      onChange={(e) => setUserRole(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                      placeholder="Your role"
+                    />
                   </div>
                 </div>
-              </div>
+                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                        <Key className="w-4 h-4 text-blue-400" />
+                        Change Password
+                      </h4>
+                      <p className="text-xs text-slate-400">Update your account security</p>
+                    </div>
+                    <button 
+                      onClick={() => alert('Password change dialog')}
+                      className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                    >
+                      Change
+                    </button>
+                  </div>
+                </div>
+              </SettingsSection>
 
               {/* Appearance Section */}
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Palette className="w-5 h-5 text-blue-400" />
-                  <h3 className="text-lg font-semibold text-white">Appearance</h3>
-                </div>
-                <div className="space-y-4">
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <label className="text-sm font-medium text-slate-300 mb-3 block">Theme</label>
-                    <div className="grid grid-cols-3 gap-3">
-                      {[
-                        { value: 'light', icon: Sun, label: 'Light' },
-                        { value: 'dark', icon: Moon, label: 'Dark' },
-                        { value: 'auto', icon: Monitor, label: 'Auto' }
-                      ].map((opt) => (
-                        <button
-                          key={opt.value}
-                          onClick={() => setTheme(opt.value as any)}
-                          className={`flex flex-col items-center gap-2 p-4 rounded-lg border transition-all ${
-                            theme === opt.value
-                              ? 'bg-blue-500/20 border-blue-500/50 text-blue-400'
-                              : 'bg-slate-800/50 border-white/5 text-slate-400 hover:border-white/10'
-                          }`}
-                        >
-                          <opt.icon className="w-5 h-5" />
-                          <span className="text-sm font-medium">{opt.label}</span>
-                        </button>
-                      ))}
-                    </div>
+              <SettingsSection icon={Palette} title="Appearance & Display" iconColor="bg-blue-500/20 text-blue-400">
+                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                  <label className="text-sm font-medium text-slate-300 mb-3 block">Theme Mode</label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { value: 'light', icon: Sun, label: 'Light' },
+                      { value: 'dark', icon: Moon, label: 'Dark' },
+                      { value: 'auto', icon: Monitor, label: 'Auto' }
+                    ].map((opt) => (
+                      <button
+                        key={opt.value}
+                        onClick={() => setTheme(opt.value as any)}
+                        className={`flex flex-col items-center gap-2 p-3 rounded-lg border transition-all ${
+                          theme === opt.value
+                            ? 'bg-blue-500/20 border-blue-500/50 text-blue-400'
+                            : 'bg-slate-800/50 border-white/5 text-slate-400 hover:border-white/10'
+                        }`}
+                      >
+                        <opt.icon className="w-5 h-5" />
+                        <span className="text-xs font-medium">{opt.label}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
-              </div>
-
-              {/* General Section */}
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Globe className="w-5 h-5 text-purple-400" />
-                  <h3 className="text-lg font-semibold text-white">General</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Accent Color</label>
+                    <select
+                      value={accentColor}
+                      onChange={(e) => setAccentColor(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                    >
+                      <option value="blue">Blue</option>
+                      <option value="purple">Purple</option>
+                      <option value="green">Green</option>
+                      <option value="red">Red</option>
+                      <option value="orange">Orange</option>
+                    </select>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Font Size</label>
+                    <select
+                      value={fontSize}
+                      onChange={(e) => setFontSize(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                    >
+                      <option value="small">Small</option>
+                      <option value="medium">Medium</option>
+                      <option value="large">Large</option>
+                      <option value="xlarge">Extra Large</option>
+                    </select>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Message Spacing</label>
+                    <select
+                      value={messageSpacing}
+                      onChange={(e) => setMessageSpacing(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                    >
+                      <option value="compact">Compact</option>
+                      <option value="comfortable">Comfortable</option>
+                      <option value="spacious">Spacious</option>
+                    </select>
+                  </div>
                 </div>
-                <div className="space-y-3">
+
+                <ToggleSetting
+                  label="Code Syntax Highlighting"
+                  description="Enable colorful code highlighting in messages"
+                  checked={codeHighlighting}
+                  onChange={setCodeHighlighting}
+                />
+                <ToggleSetting
+                  label="Compact Mode"
+                  description="Reduce spacing for more content on screen"
+                  checked={compactMode}
+                  onChange={setCompactMode}
+                />
+                <ToggleSetting
+                  label="Smooth Animations"
+                  description="Enable transitions and micro-interactions"
+                  checked={animationsEnabled}
+                  onChange={setAnimationsEnabled}
+                />
+                <ToggleSetting
+                  label="Show Timestamps"
+                  description="Display time on each message"
+                  checked={showTimestamps}
+                  onChange={setShowTimestamps}
+                />
+              </SettingsSection>
+
+              {/* Language & Region */}
+              <SettingsSection icon={Globe} title="Language & Region" iconColor="bg-purple-500/20 text-purple-400">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
                     <label className="text-sm font-medium text-slate-300 mb-2 block">Language</label>
                     <select
                       value={language}
                       onChange={(e) => setLanguage(e.target.value)}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
                     >
                       <option value="english">English</option>
                       <option value="spanish">Spanish</option>
                       <option value="french">French</option>
                       <option value="german">German</option>
                       <option value="japanese">Japanese</option>
+                      <option value="chinese">Chinese</option>
+                      <option value="arabic">Arabic</option>
+                      <option value="hindi">Hindi</option>
+                    </select>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Timezone</label>
+                    <select
+                      value={timezone}
+                      onChange={(e) => setTimezone(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                    >
+                      <option value="America/Los_Angeles">Pacific Time</option>
+                      <option value="America/New_York">Eastern Time</option>
+                      <option value="Europe/London">London</option>
+                      <option value="Europe/Paris">Paris</option>
+                      <option value="Asia/Tokyo">Tokyo</option>
+                      <option value="Asia/Kolkata">India</option>
+                    </select>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Date Format</label>
+                    <select
+                      value={dateFormat}
+                      onChange={(e) => setDateFormat(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                    >
+                      <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                      <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                      <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                    </select>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Time Format</label>
+                    <select
+                      value={timeFormat}
+                      onChange={(e) => setTimeFormat(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                    >
+                      <option value="12h">12-hour (AM/PM)</option>
+                      <option value="24h">24-hour</option>
                     </select>
                   </div>
                 </div>
-              </div>
+              </SettingsSection>
 
-              {/* Notifications Section */}
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Bell className="w-5 h-5 text-green-400" />
-                  <h3 className="text-lg font-semibold text-white">Notifications</h3>
-                </div>
-                <div className="space-y-3">
-                  <ToggleSetting
-                    label="Push Notifications"
-                    description="Receive notifications about new messages and updates"
-                    checked={notifications}
-                    onChange={setNotifications}
-                  />
-                  <ToggleSetting
-                    label="Email Notifications"
-                    description="Get important updates via email"
-                    checked={emailNotifications}
-                    onChange={setEmailNotifications}
-                  />
-                  <ToggleSetting
-                    label="Desktop Notifications"
-                    description="Show notifications on your desktop"
-                    checked={desktopNotifications}
-                    onChange={setDesktopNotifications}
-                  />
-                  <ToggleSetting
-                    label="Sound Effects"
-                    description="Play sounds for new messages and interactions"
-                    checked={soundEffects}
-                    onChange={setSoundEffects}
-                  />
-                </div>
-              </div>
-
-              {/* Advanced Section */}
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Zap className="w-5 h-5 text-yellow-400" />
-                  <h3 className="text-lg font-semibold text-white">Advanced</h3>
-                </div>
-                <div className="space-y-3">
-                  <ToggleSetting
-                    label="Auto-save Chats"
-                    description="Automatically save your conversation history"
-                    checked={autoSave}
-                    onChange={setAutoSave}
-                  />
-                </div>
-              </div>
-
-              {/* Privacy & Security Section */}
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Shield className="w-5 h-5 text-red-400" />
-                  <h3 className="text-lg font-semibold text-white">Privacy & Security</h3>
-                </div>
-                <div className="space-y-3">
-                  <ToggleSetting
-                    label="Two-Factor Authentication"
-                    description="Add an extra layer of security to your account"
-                    checked={twoFactorAuth}
-                    onChange={setTwoFactorAuth}
-                  />
-                  <ToggleSetting
-                    label="Biometric Authentication"
-                    description="Use fingerprint or face recognition to log in"
-                    checked={biometricAuth}
-                    onChange={setBiometricAuth}
-                  />
+              {/* Notifications */}
+              <SettingsSection icon={Bell} title="Notifications & Alerts" iconColor="bg-green-500/20 text-green-400">
+                <ToggleSetting
+                  label="Master Notifications"
+                  description="Enable all notification types"
+                  checked={notifications}
+                  onChange={setNotifications}
+                />
+                <ToggleSetting
+                  label="Email Notifications"
+                  description="Receive updates via email"
+                  checked={emailNotifications}
+                  onChange={setEmailNotifications}
+                  disabled={!notifications}
+                />
+                <ToggleSetting
+                  label="Desktop Notifications"
+                  description="Show browser notifications"
+                  checked={desktopNotifications}
+                  onChange={setDesktopNotifications}
+                  disabled={!notifications}
+                />
+                <ToggleSetting
+                  label="Mobile Push Notifications"
+                  description="Receive notifications on mobile devices"
+                  checked={mobileNotifications}
+                  onChange={setMobileNotifications}
+                  disabled={!notifications}
+                />
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-sm font-medium text-white mb-1">Active Sessions</h4>
-                        <p className="text-xs text-slate-400">Manage devices connected to your account</p>
-                      </div>
-                      <button 
-                        onClick={() => alert('Active sessions list would appear here')}
-                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
-                      >
-                        View
-                      </button>
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Notification Sound</label>
+                    <select
+                      value={notificationSound}
+                      onChange={(e) => setNotificationSound(e.target.value)}
+                      disabled={!notifications}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all disabled:opacity-50"
+                    >
+                      <option value="default">Default</option>
+                      <option value="chime">Chime</option>
+                      <option value="bell">Bell</option>
+                      <option value="subtle">Subtle</option>
+                      <option value="none">None</option>
+                    </select>
+                  </div>
+                </div>
+
+                <ToggleSetting
+                  label="Vibration"
+                  description="Vibrate on new notifications"
+                  checked={vibrationEnabled}
+                  onChange={setVibrationEnabled}
+                  disabled={!notifications}
+                />
+                
+                <ToggleSetting
+                  label="Do Not Disturb Mode"
+                  description="Mute notifications during specific hours"
+                  checked={doNotDisturb}
+                  onChange={setDoNotDisturb}
+                />
+                
+                {doNotDisturb && (
+                  <div className="grid grid-cols-2 gap-4 bg-slate-800/30 border border-white/5 rounded-xl p-4">
+                    <div>
+                      <label className="text-sm font-medium text-slate-300 mb-2 block">Start Time</label>
+                      <input
+                        type="time"
+                        value={dndStartTime}
+                        onChange={(e) => setDndStartTime(e.target.value)}
+                        className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-slate-300 mb-2 block">End Time</label>
+                      <input
+                        type="time"
+                        value={dndEndTime}
+                        onChange={(e) => setDndEndTime(e.target.value)}
+                        className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50"
+                      />
                     </div>
                   </div>
+                )}
+              </SettingsSection>
+
+              {/* AI Behavior */}
+              <SettingsSection icon={Sparkles} title="AI Behavior & Preferences" iconColor="bg-yellow-500/20 text-yellow-400">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">AI Personality</label>
+                    <select
+                      value={aiPersonality}
+                      onChange={(e) => setAiPersonality(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                    >
+                      <option value="professional">Professional</option>
+                      <option value="friendly">Friendly</option>
+                      <option value="concise">Concise</option>
+                      <option value="creative">Creative</option>
+                      <option value="technical">Technical</option>
+                    </select>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Response Length</label>
+                    <select
+                      value={responseLength}
+                      onChange={(e) => setResponseLength(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                    >
+                      <option value="concise">Concise</option>
+                      <option value="balanced">Balanced</option>
+                      <option value="detailed">Detailed</option>
+                      <option value="comprehensive">Comprehensive</option>
+                    </select>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">Creativity Level</label>
+                    <select
+                      value={creativityLevel}
+                      onChange={(e) => setCreativityLevel(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                    >
+                      <option value="conservative">Conservative</option>
+                      <option value="balanced">Balanced</option>
+                      <option value="creative">Creative</option>
+                      <option value="experimental">Experimental</option>
+                    </select>
+                  </div>
+                </div>
+
+                <ToggleSetting
+                  label="Enable Code Execution"
+                  description="Allow AI to run code and perform computations"
+                  checked={codeExecution}
+                  onChange={setCodeExecution}
+                />
+                <ToggleSetting
+                  label="Enable Web Search"
+                  description="Let AI search the internet for current information"
+                  checked={webSearch}
+                  onChange={setWebSearch}
+                />
+                <ToggleSetting
+                  label="Enable Image Generation"
+                  description="Allow AI to create images and visualizations"
+                  checked={imageGeneration}
+                  onChange={setImageGeneration}
+                />
+                <ToggleSetting
+                  label="Enable Data Analysis"
+                  description="Advanced analytics and data processing capabilities"
+                  checked={dataAnalysis}
+                  onChange={setDataAnalysis}
+                />
+                <ToggleSetting
+                  label="Suggest Follow-up Questions"
+                  description="Show relevant follow-up prompts after responses"
+                  checked={suggestFollowUps}
+                  onChange={setSuggestFollowUps}
+                />
+                <ToggleSetting
+                  label="Context Memory"
+                  description="Remember conversation context across sessions"
+                  checked={contextMemory}
+                  onChange={setContextMemory}
+                />
+                <ToggleSetting
+                  label="Auto-correct Inputs"
+                  description="Automatically fix spelling and grammar in your messages"
+                  checked={autoCorrect}
+                  onChange={setAutoCorrect}
+                />
+              </SettingsSection>
+
+              {/* Privacy & Security */}
+              <SettingsSection icon={Shield} title="Privacy & Security" iconColor="bg-red-500/20 text-red-400">
+                <ToggleSetting
+                  label="Two-Factor Authentication"
+                  description="Require 2FA code for account access"
+                  checked={twoFactorAuth}
+                  onChange={setTwoFactorAuth}
+                />
+                <ToggleSetting
+                  label="Biometric Authentication"
+                  description="Use fingerprint or face recognition"
+                  checked={biometricAuth}
+                  onChange={setBiometricAuth}
+                />
+                <ToggleSetting
+                  label="Passwordless Login"
+                  description="Sign in with magic links via email"
+                  checked={passwordlessLogin}
+                  onChange={setPasswordlessLogin}
+                />
+                
+                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                  <label className="text-sm font-medium text-slate-300 mb-2 block">Session Timeout</label>
+                  <select
+                    value={sessionTimeout}
+                    onChange={(e) => setSessionTimeout(e.target.value)}
+                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                  >
+                    <option value="15">15 minutes</option>
+                    <option value="30">30 minutes</option>
+                    <option value="60">1 hour</option>
+                    <option value="240">4 hours</option>
+                    <option value="never">Never</option>
+                  </select>
+                </div>
+
+                <ToggleSetting
+                  label="End-to-End Encryption"
+                  description="Encrypt all conversations and data"
+                  checked={encryptionEnabled}
+                  onChange={setEncryptionEnabled}
+                />
+                <ToggleSetting
+                  label="Auto Logout on Inactivity"
+                  description="Automatically sign out after timeout period"
+                  checked={autoLogout}
+                  onChange={setAutoLogout}
+                />
+
+                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                        <Smartphone className="w-4 h-4 text-blue-400" />
+                        Active Sessions
+                      </h4>
+                      <p className="text-xs text-slate-400">Manage logged-in devices</p>
+                    </div>
+                    <button 
+                      onClick={() => alert('Active sessions: 3 devices')}
+                      className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                    >
+                      View All
+                    </button>
+                  </div>
+                </div>
+
+                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                        <Eye className="w-4 h-4 text-blue-400" />
+                        Login History
+                      </h4>
+                      <p className="text-xs text-slate-400">View recent account access</p>
+                    </div>
+                    <button 
+                      onClick={() => alert('Login history would display here')}
+                      className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                    >
+                      View
+                    </button>
+                  </div>
+                </div>
+              </SettingsSection>
+
+              {/* Data & Storage */}
+              <SettingsSection icon={Database} title="Data & Storage" iconColor="bg-cyan-500/20 text-cyan-400">
+                <ToggleSetting
+                  label="Save Chat History"
+                  description="Store conversations for future reference"
+                  checked={saveHistory}
+                  onChange={setSaveHistory}
+                />
+                <ToggleSetting
+                  label="Auto-Save Drafts"
+                  description="Automatically save unsent messages"
+                  checked={autoSave}
+                  onChange={setAutoSave}
+                />
+                <ToggleSetting
+                  label="Automatic Backups"
+                  description="Regular backups of your data"
+                  checked={autoBackup}
+                  onChange={setAutoBackup}
+                />
+                
+                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                  <label className="text-sm font-medium text-slate-300 mb-2 block">Backup Frequency</label>
+                  <select
+                    value={backupFrequency}
+                    onChange={(e) => setBackupFrequency(e.target.value)}
+                    disabled={!autoBackup}
+                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all disabled:opacity-50"
+                  >
+                    <option value="hourly">Hourly</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                </div>
+
+                <ToggleSetting
+                  label="Cloud Sync"
+                  description="Sync data across all your devices"
+                  checked={cloudSync}
+                  onChange={setCloudSync}
+                />
+                <ToggleSetting
+                  label="Data Compression"
+                  description="Reduce storage space usage"
+                  checked={compressionEnabled}
+                  onChange={setCompressionEnabled}
+                />
+
+                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                  <label className="text-sm font-medium text-slate-300 mb-2 block">Cache Size Limit (MB)</label>
+                  <input
+                    type="number"
+                    value={cacheSize}
+                    onChange={(e) => setCacheSize(e.target.value)}
+                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                    min="100"
+                    max="5000"
+                  />
+                  <p className="text-xs text-slate-400 mt-2">Current usage: 247 MB</p>
+                </div>
+
+                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                        <Download className="w-4 h-4 text-blue-400" />
+                        Download All Data
+                      </h4>
+                      <p className="text-xs text-slate-400">Export your complete data archive</p>
+                    </div>
+                    <button 
+                      onClick={() => alert('Data export started')}
+                      className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                    >
+                      Export
+                    </button>
+                  </div>
+                </div>
+
+                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                        <Trash2 className="w-4 h-4 text-red-400" />
+                        Clear All Data
+                      </h4>
+                      <p className="text-xs text-slate-400">Permanently delete chat history and cache</p>
+                    </div>
+                    <button 
+                      onClick={() => {
+                        if (confirm('This will delete all your data. Continue?')) {
+                          alert('Data cleared');
+                        }
+                      }}
+                      className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+
+                <ToggleSetting
+                  label="Share Anonymous Usage Data"
+                  description="Help improve Grux by sharing analytics"
+                  checked={analyticsData}
+                  onChange={setAnalyticsData}
+                />
+                <ToggleSetting
+                  label="Allow Third-Party Access"
+                  description="Enable integrations with external services"
+                  checked={thirdPartyAccess}
+                  onChange={setThirdPartyAccess}
+                />
+                <ToggleSetting
+                  label="Location Tracking"
+                  description="Use location for personalized results"
+                  checked={locationTracking}
+                  onChange={setLocationTracking}
+                />
+              </SettingsSection>
+
+              {/* Accessibility */}
+              <SettingsSection icon={Eye} title="Accessibility" iconColor="bg-orange-500/20 text-orange-400">
+                <ToggleSetting
+                  label="Screen Reader Support"
+                  description="Optimize for screen reader navigation"
+                  checked={screenReader}
+                  onChange={setScreenReader}
+                />
+                <ToggleSetting
+                  label="High Contrast Mode"
+                  description="Increase contrast for better visibility"
+                  checked={highContrast}
+                  onChange={setHighContrast}
+                />
+                <ToggleSetting
+                  label="Keyboard Navigation"
+                  description="Full keyboard control support"
+                  checked={keyboardNavigation}
+                  onChange={setKeyboardNavigation}
+                />
+                <ToggleSetting
+                  label="Text-to-Speech"
+                  description="Read responses aloud"
+                  checked={textToSpeech}
+                  onChange={setTextToSpeech}
+                />
+                <ToggleSetting
+                  label="Speech-to-Text"
+                  description="Voice input for messages"
+                  checked={speechToText}
+                  onChange={setSpeechToText}
+                />
+                <ToggleSetting
+                  label="Reduce Motion"
+                  description="Minimize animations and transitions"
+                  checked={reducedMotion}
+                  onChange={setReducedMotion}
+                />
+                <ToggleSetting
+                  label="Focus Indicators"
+                  description="Show clear focus outlines"
+                  checked={focusIndicators}
+                  onChange={setFocusIndicators}
+                />
+
+                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                        <Keyboard className="w-4 h-4 text-blue-400" />
+                        Keyboard Shortcuts
+                      </h4>
+                      <p className="text-xs text-slate-400">View and customize shortcuts</p>
+                    </div>
+                    <button 
+                      onClick={() => alert('Keyboard shortcuts reference')}
+                      className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                    >
+                      View
+                    </button>
+                  </div>
+                </div>
+              </SettingsSection>
+
+              {/* Advanced Settings */}
+              <SettingsSection icon={Code} title="Advanced Settings" iconColor="bg-pink-500/20 text-pink-400">
+                <ToggleSetting
+                  label="Developer Mode"
+                  description="Enable advanced developer features"
+                  checked={developerMode}
+                  onChange={setDeveloperMode}
+                />
+                <ToggleSetting
+                  label="Beta Features"
+                  description="Access experimental features early"
+                  checked={betaFeatures}
+                  onChange={setBetaFeatures}
+                />
+                <ToggleSetting
+                  label="Experimental Features"
+                  description="Try cutting-edge unstable features"
+                  checked={experimentalFeatures}
+                  onChange={setExperimentalFeatures}
+                />
+                <ToggleSetting
+                  label="Debug Mode"
+                  description="Show detailed error logs and diagnostics"
+                  checked={debugMode}
+                  onChange={setDebugMode}
+                />
+                <ToggleSetting
+                  label="API Access"
+                  description="Enable programmatic access to Grux"
+                  checked={apiAccess}
+                  onChange={setApiAccess}
+                />
+                <ToggleSetting
+                  label="Webhook Integration"
+                  description="Send events to external webhooks"
+                  checked={webhooks}
+                  onChange={setWebhooks}
+                />
+                <ToggleSetting
+                  label="Custom AI Models"
+                  description="Use your own fine-tuned models"
+                  checked={customModels}
+                  onChange={setCustomModels}
+                />
+
+                {apiAccess && (
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-3">
                       <div>
-                        <h4 className="text-sm font-medium text-white mb-1">Blocked Users</h4>
-                        <p className="text-xs text-slate-400">Manage your blocked users list</p>
+                        <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                          <Key className="w-4 h-4 text-blue-400" />
+                          API Keys
+                        </h4>
+                        <p className="text-xs text-slate-400">Manage your API credentials</p>
                       </div>
                       <button 
-                        onClick={() => alert('Blocked users list would appear here')}
+                        onClick={() => alert('API key management')}
                         className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
                       >
                         Manage
                       </button>
                     </div>
+                    <div className="bg-slate-900/50 border border-white/10 rounded-lg p-3">
+                      <p className="text-xs text-slate-400 font-mono">sk-grux-••••••••••••••••••••••••</p>
+                    </div>
                   </div>
-                </div>
-              </div>
+                )}
 
-              {/* Data Control Section */}
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Lock className="w-5 h-5 text-purple-400" />
-                  <h3 className="text-lg font-semibold text-white">Data Control</h3>
-                </div>
-                <div className="space-y-3">
-                  <ToggleSetting
-                    label="Save Chat History"
-                    description="Store your conversations for future reference"
-                    checked={saveHistory}
-                    onChange={setSaveHistory}
-                  />
-                  <ToggleSetting
-                    label="Data Sharing"
-                    description="Share anonymized data to help improve Grux"
-                    checked={dataSharing}
-                    onChange={setDataSharing}
-                  />
-                  <ToggleSetting
-                    label="Usage Analytics"
-                    description="Help us improve by sharing usage patterns"
-                    checked={analyticsData}
-                    onChange={setAnalyticsData}
-                  />
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-sm font-medium text-white mb-1">Download Your Data</h4>
-                        <p className="text-xs text-slate-400">Get a copy of all your information</p>
-                      </div>
-                      <button 
-                        onClick={() => alert('Data download would start here')}
-                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
-                      >
-                        Download
-                      </button>
-                    </div>
-                  </div>
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-sm font-medium text-white mb-1">Clear Chat History</h4>
-                        <p className="text-xs text-slate-400">Delete all your conversation history</p>
-                      </div>
-                      <button 
-                        onClick={() => {
-                          if (confirm('Are you sure you want to clear all chat history?')) {
-                            alert('Chat history cleared');
-                          }
-                        }}
-                        className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
-                      >
-                        Clear
-                      </button>
-                    </div>
-                  </div>
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-sm font-medium text-white mb-1">Delete Account</h4>
-                        <p className="text-xs text-slate-400">Permanently delete your account and all data</p>
-                      </div>
-                      <button 
-                        onClick={() => {
-                          if (confirm('Are you sure? This action cannot be undone!')) {
-                            alert('Account deletion process initiated');
-                          }
-                        }}
-                        className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Parental Control Section */}
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Shield className="w-5 h-5 text-yellow-400" />
-                  <h3 className="text-lg font-semibold text-white">Parental Control</h3>
-                </div>
-                <div className="space-y-3">
-                  <ToggleSetting
-                    label="Enable Parental Control"
-                    description="Restrict content and features for younger users"
-                    checked={parentalControl}
-                    onChange={setParentalControl}
-                  />
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <label className="text-sm font-medium text-slate-300 mb-2 block">Content Filter Level</label>
-                    <select
-                      value={contentFilter}
-                      onChange={(e) => setContentFilter(e.target.value)}
-                      disabled={!parentalControl}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      <option value="strict">Strict - Maximum filtering</option>
-                      <option value="moderate">Moderate - Balanced filtering</option>
-                      <option value="light">Light - Minimal filtering</option>
-                    </select>
-                  </div>
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-sm font-medium text-white mb-1">Time Limits</h4>
-                        <p className="text-xs text-slate-400">Set daily usage limits</p>
-                      </div>
-                      <button 
-                        disabled={!parentalControl}
-                        onClick={() => alert('Time limits configuration would appear here')}
-                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Configure
-                      </button>
-                    </div>
-                  </div>
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-sm font-medium text-white mb-1">Activity Report</h4>
-                        <p className="text-xs text-slate-400">View usage statistics and history</p>
-                      </div>
-                      <button 
-                        disabled={!parentalControl}
-                        onClick={() => alert('Activity report would be displayed here')}
-                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        View Report
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Account Section */}
-              <div className="mb-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <User className="w-5 h-5 text-indigo-400" />
-                  <h3 className="text-lg font-semibold text-white">Account</h3>
-                </div>
-                <div className="space-y-3">
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <h4 className="text-sm font-medium text-white mb-1">Account Status</h4>
-                        <p className="text-xs text-slate-400">Free Plan</p>
-                      </div>
-                      <span className="px-3 py-1 bg-blue-500/20 border border-blue-500/50 text-blue-400 text-xs font-medium rounded-full">
-                        Active
-                      </span>
+                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                        <RefreshCw className="w-4 h-4 text-blue-400" />
+                        Reset All Settings
+                      </h4>
+                      <p className="text-xs text-slate-400">Restore default configuration</p>
                     </div>
                     <button 
                       onClick={() => {
-                        setShowSettings(false);
-                        setIsPricingModalOpen(true);
+                        if (confirm('Reset all settings to default values?')) {
+                          alert('Settings reset to defaults');
+                        }
                       }}
-                      className="w-full py-2 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-amber-500/20"
+                      className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
                     >
-                      Upgrade to Pro
+                      Reset
                     </button>
                   </div>
+                </div>
+              </SettingsSection>
+
+              {/* About & Help */}
+              <SettingsSection icon={Info} title="About & Support" iconColor="bg-slate-500/20 text-slate-400">
+                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="text-sm font-medium text-white mb-1">Version Information</h4>
+                      <p className="text-xs text-slate-400">Grux AI Assistant v2.5.0</p>
+                    </div>
+                    <span className="px-3 py-1 bg-green-500/20 border border-green-500/50 text-green-400 text-xs font-medium rounded-full">
+                      Up to date
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500">Last updated: October 30, 2025</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <button className="bg-slate-800/50 border border-white/5 rounded-xl p-4 text-left hover:border-white/10 transition-all">
+                    <div className="flex items-center gap-3">
+                      <HelpCircle className="w-5 h-5 text-blue-400" />
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-0.5">Help Center</h4>
+                        <p className="text-xs text-slate-400">FAQs and guides</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-slate-500 ml-auto" />
+                    </div>
+                  </button>
+
+                  <button className="bg-slate-800/50 border border-white/5 rounded-xl p-4 text-left hover:border-white/10 transition-all">
+                    <div className="flex items-center gap-3">
+                      <FileText className="w-5 h-5 text-purple-400" />
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-0.5">Documentation</h4>
+                        <p className="text-xs text-slate-400">Technical docs</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-slate-500 ml-auto" />
+                    </div>
+                  </button>
+
+                  <button className="bg-slate-800/50 border border-white/5 rounded-xl p-4 text-left hover:border-white/10 transition-all">
+                    <div className="flex items-center gap-3">
+                      <Mail className="w-5 h-5 text-green-400" />
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-0.5">Contact Support</h4>
+                        <p className="text-xs text-slate-400">Get assistance</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-slate-500 ml-auto" />
+                    </div>
+                  </button>
+
+                  <button 
+                    onClick={() => {
+                      setShowSettings(false);
+                      setIsLicenseModalOpen(true);
+                    }}
+                    className="bg-slate-800/50 border border-white/5 rounded-xl p-4 text-left hover:border-white/10 transition-all"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Shield className="w-5 h-5 text-amber-400" />
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-0.5">License</h4>
+                        <p className="text-xs text-slate-400">MIT License</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-slate-500 ml-auto" />
+                    </div>
+                  </button>
+                </div>
+
+                <div className="bg-gradient-to-br from-slate-800/50 to-slate-800/30 border border-white/5 rounded-xl p-6 text-center">
+                  <p className="text-sm text-slate-300 mb-2">Made with ❤️ by ANTIK MONDAL</p>
+                  <p className="text-xs text-slate-500">© 2025 Grux AI. All rights reserved.</p>
+                </div>
+              </SettingsSection>
+
+              {/* Account Management */}
+              <div className="mb-4">
+                <div className="flex items-center gap-3 mb-5 pb-3 border-b border-white/5">
+                  <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                    <Crown className="w-5 h-5 text-indigo-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">Subscription & Billing</h3>
+                </div>
+                <div className="bg-gradient-to-br from-slate-800/50 to-slate-800/30 border border-white/5 rounded-xl p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <p className="text-sm text-slate-400 mb-1">Current Plan</p>
+                      <p className="text-2xl font-bold text-white">Free Plan</p>
+                    </div>
+                    <span className="px-4 py-2 bg-blue-500/20 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-full">
+                      Active
+                    </span>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      setShowSettings(false);
+                      setIsPricingModalOpen(true);
+                    }}
+                    className="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-medium rounded-lg transition-all shadow-lg shadow-amber-500/20"
+                  >
+                    Upgrade to Pro
+                  </button>
                 </div>
               </div>
             </div>
