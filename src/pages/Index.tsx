@@ -709,8 +709,14 @@ const GruxApp = () => {
                   <Settings className="w-5 h-5 text-slate-400" />
                   Account Actions
                 </h3>
-                <div className="space-y-3">
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+
+                {/* Grid Layout for Side-by-Side Boxes */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  
+                  {/* Change Password */}
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4 
+                                  transform transition-all duration-300 hover:scale-105 
+                                  hover:shadow-lg hover:border-blue-500/30">
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className="text-sm font-medium text-white mb-1">Change Password</h4>
@@ -718,13 +724,19 @@ const GruxApp = () => {
                       </div>
                       <button 
                         onClick={() => alert('Password change dialog would open here')}
-                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 
+                                  border border-blue-500/50 text-blue-400 text-sm font-medium 
+                                  rounded-lg transition-all"
                       >
                         Change
                       </button>
                     </div>
                   </div>
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+
+                  {/* Download Data */}
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4 
+                                  transform transition-all duration-300 hover:scale-105 
+                                  hover:shadow-lg hover:border-blue-500/30">
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className="text-sm font-medium text-white mb-1">Download Data</h4>
@@ -732,13 +744,19 @@ const GruxApp = () => {
                       </div>
                       <button 
                         onClick={() => alert('Data download would start')}
-                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 
+                                  border border-blue-500/50 text-blue-400 text-sm font-medium 
+                                  rounded-lg transition-all"
                       >
                         Export
                       </button>
                     </div>
                   </div>
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+
+                  {/* Sign Out */}
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4 
+                                  transform transition-all duration-300 hover:scale-105 
+                                  hover:shadow-lg hover:border-red-500/30">
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className="text-sm font-medium text-white mb-1">Sign Out</h4>
@@ -750,7 +768,9 @@ const GruxApp = () => {
                             alert('Signing out...');
                           }
                         }}
-                        className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
+                        className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 
+                                  border border-red-500/50 text-red-400 text-sm font-medium 
+                                  rounded-lg transition-all"
                       >
                         Sign Out
                       </button>
@@ -929,30 +949,32 @@ const GruxApp = () => {
                   </div>
                 </div>
 
-                <ToggleSetting
-                  label="Code Syntax Highlighting"
-                  description="Enable colorful code highlighting in messages"
-                  checked={codeHighlighting}
-                  onChange={setCodeHighlighting}
-                />
-                <ToggleSetting
-                  label="Compact Mode"
-                  description="Reduce spacing for more content on screen"
-                  checked={compactMode}
-                  onChange={setCompactMode}
-                />
-                <ToggleSetting
-                  label="Smooth Animations"
-                  description="Enable transitions and micro-interactions"
-                  checked={animationsEnabled}
-                  onChange={setAnimationsEnabled}
-                />
-                <ToggleSetting
-                  label="Show Timestamps"
-                  description="Display time on each message"
-                  checked={showTimestamps}
-                  onChange={setShowTimestamps}
-                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <ToggleSetting
+                    label="Code Syntax Highlighting"
+                    description="Enable colorful code highlighting in messages"
+                    checked={codeHighlighting}
+                    onChange={setCodeHighlighting}
+                  />
+                  <ToggleSetting
+                    label="Compact Mode"
+                    description="Reduce spacing for more content on screen"
+                    checked={compactMode}
+                    onChange={setCompactMode}
+                  />
+                  <ToggleSetting
+                    label="Smooth Animations"
+                    description="Enable transitions and micro-interactions"
+                    checked={animationsEnabled}
+                    onChange={setAnimationsEnabled}
+                  />
+                  <ToggleSetting
+                    label="Show Timestamps"
+                    description="Display time on each message"
+                    checked={showTimestamps}
+                    onChange={setShowTimestamps}
+                  />
+                </div>
               </SettingsSection>
 
               {/* Language & Region */}
@@ -1018,69 +1040,70 @@ const GruxApp = () => {
 
               {/* Notifications */}
               <SettingsSection icon={Bell} title="Notifications & Alerts" iconColor="bg-green-500/20 text-green-400">
-                <ToggleSetting
-                  label="Master Notifications"
-                  description="Enable all notification types"
-                  checked={notifications}
-                  onChange={setNotifications}
-                />
-                <ToggleSetting
-                  label="Email Notifications"
-                  description="Receive updates via email"
-                  checked={emailNotifications}
-                  onChange={setEmailNotifications}
-                  disabled={!notifications}
-                />
-                <ToggleSetting
-                  label="Desktop Notifications"
-                  description="Show browser notifications"
-                  checked={desktopNotifications}
-                  onChange={setDesktopNotifications}
-                  disabled={!notifications}
-                />
-                <ToggleSetting
-                  label="Mobile Push Notifications"
-                  description="Receive notifications on mobile devices"
-                  checked={mobileNotifications}
-                  onChange={setMobileNotifications}
-                  disabled={!notifications}
-                />
-                
+                {/* Group all toggles in a grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <label className="text-sm font-medium text-slate-300 mb-2 block">Notification Sound</label>
-                    <select
-                      value={notificationSound}
-                      onChange={(e) => setNotificationSound(e.target.value)}
-                      disabled={!notifications}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all disabled:opacity-50"
-                    >
-                      <option value="default">Default</option>
-                      <option value="chime">Chime</option>
-                      <option value="bell">Bell</option>
-                      <option value="subtle">Subtle</option>
-                      <option value="none">None</option>
-                    </select>
-                  </div>
+                  <ToggleSetting
+                    label="Master Notifications"
+                    description="Enable all notification types"
+                    checked={notifications}
+                    onChange={setNotifications}
+                  />
+                  <ToggleSetting
+                    label="Email Notifications"
+                    description="Receive updates via email"
+                    checked={emailNotifications}
+                    onChange={setEmailNotifications}
+                    disabled={!notifications}
+                  />
+                  <ToggleSetting
+                    label="Desktop Notifications"
+                    description="Show browser notifications"
+                    checked={desktopNotifications}
+                    onChange={setDesktopNotifications}
+                    disabled={!notifications}
+                  />
+                  <ToggleSetting
+                    label="Mobile Push Notifications"
+                    description="Receive notifications on mobile devices"
+                    checked={mobileNotifications}
+                    onChange={setMobileNotifications}
+                    disabled={!notifications}
+                  />
+                  <ToggleSetting
+                    label="Vibration"
+                    description="Vibrate on new notifications"
+                    checked={vibrationEnabled}
+                    onChange={setVibrationEnabled}
+                    disabled={!notifications}
+                  />
+                  <ToggleSetting
+                    label="Do Not Disturb Mode"
+                    description="Mute notifications during specific hours"
+                    checked={doNotDisturb}
+                    onChange={setDoNotDisturb}
+                  />
                 </div>
 
-                <ToggleSetting
-                  label="Vibration"
-                  description="Vibrate on new notifications"
-                  checked={vibrationEnabled}
-                  onChange={setVibrationEnabled}
-                  disabled={!notifications}
-                />
-                
-                <ToggleSetting
-                  label="Do Not Disturb Mode"
-                  description="Mute notifications during specific hours"
-                  checked={doNotDisturb}
-                  onChange={setDoNotDisturb}
-                />
-                
+                {/* Notification sound select box */}
+                <div className="mt-4 bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                  <label className="text-sm font-medium text-slate-300 mb-2 block">Notification Sound</label>
+                  <select
+                    value={notificationSound}
+                    onChange={(e) => setNotificationSound(e.target.value)}
+                    disabled={!notifications}
+                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all disabled:opacity-50"
+                  >
+                    <option value="default">Default</option>
+                    <option value="chime">Chime</option>
+                    <option value="bell">Bell</option>
+                    <option value="subtle">Subtle</option>
+                    <option value="none">None</option>
+                  </select>
+                </div>
+
+                {/* DND time inputs side-by-side */}
                 {doNotDisturb && (
-                  <div className="grid grid-cols-2 gap-4 bg-slate-800/30 border border-white/5 rounded-xl p-4">
+                  <div className="grid grid-cols-2 gap-4 mt-4 bg-slate-800/30 border border-white/5 rounded-xl p-4">
                     <div>
                       <label className="text-sm font-medium text-slate-300 mb-2 block">Start Time</label>
                       <input
@@ -1148,412 +1171,440 @@ const GruxApp = () => {
                   </div>
                 </div>
 
-                <ToggleSetting
-                  label="Enable Code Execution"
-                  description="Allow AI to run code and perform computations"
-                  checked={codeExecution}
-                  onChange={setCodeExecution}
-                />
-                <ToggleSetting
-                  label="Enable Web Search"
-                  description="Let AI search the internet for current information"
-                  checked={webSearch}
-                  onChange={setWebSearch}
-                />
-                <ToggleSetting
-                  label="Enable Image Generation"
-                  description="Allow AI to create images and visualizations"
-                  checked={imageGeneration}
-                  onChange={setImageGeneration}
-                />
-                <ToggleSetting
-                  label="Enable Data Analysis"
-                  description="Advanced analytics and data processing capabilities"
-                  checked={dataAnalysis}
-                  onChange={setDataAnalysis}
-                />
-                <ToggleSetting
-                  label="Suggest Follow-up Questions"
-                  description="Show relevant follow-up prompts after responses"
-                  checked={suggestFollowUps}
-                  onChange={setSuggestFollowUps}
-                />
-                <ToggleSetting
-                  label="Context Memory"
-                  description="Remember conversation context across sessions"
-                  checked={contextMemory}
-                  onChange={setContextMemory}
-                />
-                <ToggleSetting
-                  label="Auto-correct Inputs"
-                  description="Automatically fix spelling and grammar in your messages"
-                  checked={autoCorrect}
-                  onChange={setAutoCorrect}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <ToggleSetting
+                    label="Enable Code Execution"
+                    description="Allow AI to run code and perform computations"
+                    checked={codeExecution}
+                    onChange={setCodeExecution}
+                  />
+                  <ToggleSetting
+                    label="Enable Web Search"
+                    description="Let AI search the internet for current information"
+                    checked={webSearch}
+                    onChange={setWebSearch}
+                  />
+                  <ToggleSetting
+                    label="Enable Image Generation"
+                    description="Allow AI to create images and visualizations"
+                    checked={imageGeneration}
+                    onChange={setImageGeneration}
+                  />
+                  <ToggleSetting
+                    label="Enable Data Analysis"
+                    description="Advanced analytics and data processing capabilities"
+                    checked={dataAnalysis}
+                    onChange={setDataAnalysis}
+                  />
+                  <ToggleSetting
+                    label="Suggest Follow-up Questions"
+                    description="Show relevant follow-up prompts after responses"
+                    checked={suggestFollowUps}
+                    onChange={setSuggestFollowUps}
+                  />
+                  <ToggleSetting
+                    label="Context Memory"
+                    description="Remember conversation context across sessions"
+                    checked={contextMemory}
+                    onChange={setContextMemory}
+                  />
+                  <ToggleSetting
+                    label="Auto-correct Inputs"
+                    description="Automatically fix spelling and grammar in your messages"
+                    checked={autoCorrect}
+                    onChange={setAutoCorrect}
+                  />
+                </div>
+
               </SettingsSection>
 
               {/* Privacy & Security */}
-              <SettingsSection icon={Shield} title="Privacy & Security" iconColor="bg-red-500/20 text-red-400">
-                <ToggleSetting
-                  label="Two-Factor Authentication"
-                  description="Require 2FA code for account access"
-                  checked={twoFactorAuth}
-                  onChange={setTwoFactorAuth}
-                />
-                <ToggleSetting
-                  label="Biometric Authentication"
-                  description="Use fingerprint or face recognition"
-                  checked={biometricAuth}
-                  onChange={setBiometricAuth}
-                />
-                <ToggleSetting
-                  label="Passwordless Login"
-                  description="Sign in with magic links via email"
-                  checked={passwordlessLogin}
-                  onChange={setPasswordlessLogin}
-                />
-                
-                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                  <label className="text-sm font-medium text-slate-300 mb-2 block">Session Timeout</label>
-                  <select
-                    value={sessionTimeout}
-                    onChange={(e) => setSessionTimeout(e.target.value)}
-                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
-                  >
-                    <option value="15">15 minutes</option>
-                    <option value="30">30 minutes</option>
-                    <option value="60">1 hour</option>
-                    <option value="240">4 hours</option>
-                    <option value="never">Never</option>
-                  </select>
-                </div>
-
-                <ToggleSetting
-                  label="End-to-End Encryption"
-                  description="Encrypt all conversations and data"
-                  checked={encryptionEnabled}
-                  onChange={setEncryptionEnabled}
-                />
-                <ToggleSetting
-                  label="Auto Logout on Inactivity"
-                  description="Automatically sign out after timeout period"
-                  checked={autoLogout}
-                  onChange={setAutoLogout}
-                />
-
-                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
-                        <Smartphone className="w-4 h-4 text-blue-400" />
-                        Active Sessions
-                      </h4>
-                      <p className="text-xs text-slate-400">Manage logged-in devices</p>
-                    </div>
-                    <button 
-                      onClick={() => alert('Active sessions: 3 devices')}
-                      className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
-                    >
-                      View All
-                    </button>
-                  </div>
-                </div>
-
-                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
-                        <Eye className="w-4 h-4 text-blue-400" />
-                        Login History
-                      </h4>
-                      <p className="text-xs text-slate-400">View recent account access</p>
-                    </div>
-                    <button 
-                      onClick={() => alert('Login history would display here')}
-                      className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
-                    >
-                      View
-                    </button>
-                  </div>
-                </div>
-              </SettingsSection>
-
-              {/* Data & Storage */}
-              <SettingsSection icon={Database} title="Data & Storage" iconColor="bg-cyan-500/20 text-cyan-400">
-                <ToggleSetting
-                  label="Save Chat History"
-                  description="Store conversations for future reference"
-                  checked={saveHistory}
-                  onChange={setSaveHistory}
-                />
-                <ToggleSetting
-                  label="Auto-Save Drafts"
-                  description="Automatically save unsent messages"
-                  checked={autoSave}
-                  onChange={setAutoSave}
-                />
-                <ToggleSetting
-                  label="Automatic Backups"
-                  description="Regular backups of your data"
-                  checked={autoBackup}
-                  onChange={setAutoBackup}
-                />
-                
-                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                  <label className="text-sm font-medium text-slate-300 mb-2 block">Backup Frequency</label>
-                  <select
-                    value={backupFrequency}
-                    onChange={(e) => setBackupFrequency(e.target.value)}
-                    disabled={!autoBackup}
-                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all disabled:opacity-50"
-                  >
-                    <option value="hourly">Hourly</option>
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                  </select>
-                </div>
-
-                <ToggleSetting
-                  label="Cloud Sync"
-                  description="Sync data across all your devices"
-                  checked={cloudSync}
-                  onChange={setCloudSync}
-                />
-                <ToggleSetting
-                  label="Data Compression"
-                  description="Reduce storage space usage"
-                  checked={compressionEnabled}
-                  onChange={setCompressionEnabled}
-                />
-
-                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                  <label className="text-sm font-medium text-slate-300 mb-2 block">Cache Size Limit (MB)</label>
-                  <input
-                    type="number"
-                    value={cacheSize}
-                    onChange={(e) => setCacheSize(e.target.value)}
-                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
-                    min="100"
-                    max="5000"
+              <SettingsSection 
+                icon={Shield} 
+                title="Privacy & Security" 
+                iconColor="bg-red-500/20 text-red-400"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <ToggleSetting
+                    label="Two-Factor Authentication"
+                    description="Require 2FA code for account access"
+                    checked={twoFactorAuth}
+                    onChange={setTwoFactorAuth}
                   />
-                  <p className="text-xs text-slate-400 mt-2">Current usage: 247 MB</p>
-                </div>
-
-                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
-                        <Download className="w-4 h-4 text-blue-400" />
-                        Download All Data
-                      </h4>
-                      <p className="text-xs text-slate-400">Export your complete data archive</p>
-                    </div>
-                    <button 
-                      onClick={() => alert('Data export started')}
-                      className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
-                    >
-                      Export
-                    </button>
-                  </div>
-                </div>
-
-                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
-                        <Trash2 className="w-4 h-4 text-red-400" />
-                        Clear All Data
-                      </h4>
-                      <p className="text-xs text-slate-400">Permanently delete chat history and cache</p>
-                    </div>
-                    <button 
-                      onClick={() => {
-                        if (confirm('This will delete all your data. Continue?')) {
-                          alert('Data cleared');
-                        }
-                      }}
-                      className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
-                    >
-                      Clear
-                    </button>
-                  </div>
-                </div>
-
-                <ToggleSetting
-                  label="Share Anonymous Usage Data"
-                  description="Help improve Grux by sharing analytics"
-                  checked={analyticsData}
-                  onChange={setAnalyticsData}
-                />
-                <ToggleSetting
-                  label="Allow Third-Party Access"
-                  description="Enable integrations with external services"
-                  checked={thirdPartyAccess}
-                  onChange={setThirdPartyAccess}
-                />
-                <ToggleSetting
-                  label="Location Tracking"
-                  description="Use location for personalized results"
-                  checked={locationTracking}
-                  onChange={setLocationTracking}
-                />
-              </SettingsSection>
-
-              {/* Accessibility */}
-              <SettingsSection icon={Eye} title="Accessibility" iconColor="bg-orange-500/20 text-orange-400">
-                <ToggleSetting
-                  label="Screen Reader Support"
-                  description="Optimize for screen reader navigation"
-                  checked={screenReader}
-                  onChange={setScreenReader}
-                />
-                <ToggleSetting
-                  label="High Contrast Mode"
-                  description="Increase contrast for better visibility"
-                  checked={highContrast}
-                  onChange={setHighContrast}
-                />
-                <ToggleSetting
-                  label="Keyboard Navigation"
-                  description="Full keyboard control support"
-                  checked={keyboardNavigation}
-                  onChange={setKeyboardNavigation}
-                />
-                <ToggleSetting
-                  label="Text-to-Speech"
-                  description="Read responses aloud"
-                  checked={textToSpeech}
-                  onChange={setTextToSpeech}
-                />
-                <ToggleSetting
-                  label="Speech-to-Text"
-                  description="Voice input for messages"
-                  checked={speechToText}
-                  onChange={setSpeechToText}
-                />
-                <ToggleSetting
-                  label="Reduce Motion"
-                  description="Minimize animations and transitions"
-                  checked={reducedMotion}
-                  onChange={setReducedMotion}
-                />
-                <ToggleSetting
-                  label="Focus Indicators"
-                  description="Show clear focus outlines"
-                  checked={focusIndicators}
-                  onChange={setFocusIndicators}
-                />
-
-                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
-                        <Keyboard className="w-4 h-4 text-blue-400" />
-                        Keyboard Shortcuts
-                      </h4>
-                      <p className="text-xs text-slate-400">View and customize shortcuts</p>
-                    </div>
-                    <button 
-                      onClick={() => alert('Keyboard shortcuts reference')}
-                      className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
-                    >
-                      View
-                    </button>
-                  </div>
-                </div>
-              </SettingsSection>
-
-              {/* Advanced Settings */}
-              <SettingsSection icon={Code} title="Advanced Settings" iconColor="bg-pink-500/20 text-pink-400">
-                <ToggleSetting
-                  label="Developer Mode"
-                  description="Enable advanced developer features"
-                  checked={developerMode}
-                  onChange={setDeveloperMode}
-                />
-                <ToggleSetting
-                  label="Beta Features"
-                  description="Access experimental features early"
-                  checked={betaFeatures}
-                  onChange={setBetaFeatures}
-                />
-                <ToggleSetting
-                  label="Experimental Features"
-                  description="Try cutting-edge unstable features"
-                  checked={experimentalFeatures}
-                  onChange={setExperimentalFeatures}
-                />
-                <ToggleSetting
-                  label="Debug Mode"
-                  description="Show detailed error logs and diagnostics"
-                  checked={debugMode}
-                  onChange={setDebugMode}
-                />
-                <ToggleSetting
-                  label="API Access"
-                  description="Enable programmatic access to Grux"
-                  checked={apiAccess}
-                  onChange={setApiAccess}
-                />
-                <ToggleSetting
-                  label="Webhook Integration"
-                  description="Send events to external webhooks"
-                  checked={webhooks}
-                  onChange={setWebhooks}
-                />
-                <ToggleSetting
-                  label="Custom AI Models"
-                  description="Use your own fine-tuned models"
-                  checked={customModels}
-                  onChange={setCustomModels}
-                />
-
-                {apiAccess && (
+                  <ToggleSetting
+                    label="Biometric Authentication"
+                    description="Use fingerprint or face recognition"
+                    checked={biometricAuth}
+                    onChange={setBiometricAuth}
+                  />
+                  <ToggleSetting
+                    label="Passwordless Login"
+                    description="Sign in with magic links via email"
+                    checked={passwordlessLogin}
+                    onChange={setPasswordlessLogin}
+                  />
                   <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                    <div className="flex items-center justify-between mb-3">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">
+                      Session Timeout
+                    </label>
+                    <select
+                      value={sessionTimeout}
+                      onChange={(e) => setSessionTimeout(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                    >
+                      <option value="15">15 minutes</option>
+                      <option value="30">30 minutes</option>
+                      <option value="60">1 hour</option>
+                      <option value="240">4 hours</option>
+                      <option value="never">Never</option>
+                    </select>
+                  </div>
+                  <ToggleSetting
+                    label="End-to-End Encryption"
+                    description="Encrypt all conversations and data"
+                    checked={encryptionEnabled}
+                    onChange={setEncryptionEnabled}
+                  />
+                  <ToggleSetting
+                    label="Auto Logout on Inactivity"
+                    description="Automatically sign out after timeout period"
+                    checked={autoLogout}
+                    onChange={setAutoLogout}
+                  />
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
                       <div>
                         <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
-                          <Key className="w-4 h-4 text-blue-400" />
-                          API Keys
+                          <Smartphone className="w-4 h-4 text-blue-400" />
+                          Active Sessions
                         </h4>
-                        <p className="text-xs text-slate-400">Manage your API credentials</p>
+                        <p className="text-xs text-slate-400">Manage logged-in devices</p>
                       </div>
                       <button 
-                        onClick={() => alert('API key management')}
+                        onClick={() => alert('Active sessions: 3 devices')}
                         className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
                       >
-                        Manage
+                        View All
                       </button>
                     </div>
-                    <div className="bg-slate-900/50 border border-white/10 rounded-lg p-3">
-                      <p className="text-xs text-slate-400 font-mono">sk-grux-••••••••••••••••••••••••</p>
-                    </div>
                   </div>
-                )}
-
-                <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
-                        <RefreshCw className="w-4 h-4 text-blue-400" />
-                        Reset All Settings
-                      </h4>
-                      <p className="text-xs text-slate-400">Restore default configuration</p>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                          <Eye className="w-4 h-4 text-blue-400" />
+                          Login History
+                        </h4>
+                        <p className="text-xs text-slate-400">View recent account access</p>
+                      </div>
+                      <button 
+                        onClick={() => alert('Login history would display here')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        View
+                      </button>
                     </div>
-                    <button 
-                      onClick={() => {
-                        if (confirm('Reset all settings to default values?')) {
-                          alert('Settings reset to defaults');
-                        }
-                      }}
-                      className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
-                    >
-                      Reset
-                    </button>
                   </div>
                 </div>
               </SettingsSection>
+
+
+              {/* Data & Storage */}
+              <SettingsSection 
+                icon={Database} 
+                title="Data & Storage" 
+                iconColor="bg-cyan-500/20 text-cyan-400"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <ToggleSetting
+                    label="Save Chat History"
+                    description="Store conversations for future reference"
+                    checked={saveHistory}
+                    onChange={setSaveHistory}
+                  />
+                  <ToggleSetting
+                    label="Auto-Save Drafts"
+                    description="Automatically save unsent messages"
+                    checked={autoSave}
+                    onChange={setAutoSave}
+                  />
+                  <ToggleSetting
+                    label="Automatic Backups"
+                    description="Regular backups of your data"
+                    checked={autoBackup}
+                    onChange={setAutoBackup}
+                  />
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">
+                      Backup Frequency
+                    </label>
+                    <select
+                      value={backupFrequency}
+                      onChange={(e) => setBackupFrequency(e.target.value)}
+                      disabled={!autoBackup}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all disabled:opacity-50"
+                    >
+                      <option value="hourly">Hourly</option>
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                    </select>
+                  </div>
+                  <ToggleSetting
+                    label="Cloud Sync"
+                    description="Sync data across all your devices"
+                    checked={cloudSync}
+                    onChange={setCloudSync}
+                  />
+                  <ToggleSetting
+                    label="Data Compression"
+                    description="Reduce storage space usage"
+                    checked={compressionEnabled}
+                    onChange={setCompressionEnabled}
+                  />
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">
+                      Cache Size Limit (MB)
+                    </label>
+                    <input
+                      type="number"
+                      value={cacheSize}
+                      onChange={(e) => setCacheSize(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                      min="100"
+                      max="5000"
+                    />
+                    <p className="text-xs text-slate-400 mt-2">Current usage: 247 MB</p>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                          <Download className="w-4 h-4 text-blue-400" />
+                          Download All Data
+                        </h4>
+                        <p className="text-xs text-slate-400">
+                          Export your complete data archive
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => alert('Data export started')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Export
+                      </button>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                          <Trash2 className="w-4 h-4 text-red-400" />
+                          Clear All Data
+                        </h4>
+                        <p className="text-xs text-slate-400">
+                          Permanently delete chat history and cache
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          if (confirm('This will delete all your data. Continue?')) {
+                            alert('Data cleared');
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                  <ToggleSetting
+                    label="Share Anonymous Usage Data"
+                    description="Help improve Grux by sharing analytics"
+                    checked={analyticsData}
+                    onChange={setAnalyticsData}
+                  />
+                  <ToggleSetting
+                    label="Allow Third-Party Access"
+                    description="Enable integrations with external services"
+                    checked={thirdPartyAccess}
+                    onChange={setThirdPartyAccess}
+                  />
+                  <ToggleSetting
+                    label="Location Tracking"
+                    description="Use location for personalized results"
+                    checked={locationTracking}
+                    onChange={setLocationTracking}
+                  />
+                </div>
+              </SettingsSection>
+
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                {/* Accessibility */}
+                <SettingsSection
+                  icon={Eye}
+                  title="Accessibility"
+                  iconColor="bg-orange-500/20 text-orange-400"
+                >
+                  <ToggleSetting
+                    label="Screen Reader Support"
+                    description="Optimize for screen reader navigation"
+                    checked={screenReader}
+                    onChange={setScreenReader}
+                  />
+                  <ToggleSetting
+                    label="High Contrast Mode"
+                    description="Increase contrast for better visibility"
+                    checked={highContrast}
+                    onChange={setHighContrast}
+                  />
+                  <ToggleSetting
+                    label="Keyboard Navigation"
+                    description="Full keyboard control support"
+                    checked={keyboardNavigation}
+                    onChange={setKeyboardNavigation}
+                  />
+                  <ToggleSetting
+                    label="Text-to-Speech"
+                    description="Read responses aloud"
+                    checked={textToSpeech}
+                    onChange={setTextToSpeech}
+                  />
+                  <ToggleSetting
+                    label="Speech-to-Text"
+                    description="Voice input for messages"
+                    checked={speechToText}
+                    onChange={setSpeechToText}
+                  />
+                  <ToggleSetting
+                    label="Reduce Motion"
+                    description="Minimize animations and transitions"
+                    checked={reducedMotion}
+                    onChange={setReducedMotion}
+                  />
+                  <ToggleSetting
+                    label="Focus Indicators"
+                    description="Show clear focus outlines"
+                    checked={focusIndicators}
+                    onChange={setFocusIndicators}
+                  />
+
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                          <Keyboard className="w-4 h-4 text-blue-400" />
+                          Keyboard Shortcuts
+                        </h4>
+                        <p className="text-xs text-slate-400">View and customize shortcuts</p>
+                      </div>
+                      <button
+                        onClick={() => alert('Keyboard shortcuts reference')}
+                        className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        View
+                      </button>
+                    </div>
+                  </div>
+                </SettingsSection>
+
+                {/* Advanced Settings */}
+                <SettingsSection
+                  icon={Code}
+                  title="Advanced Settings"
+                  iconColor="bg-pink-500/20 text-pink-400"
+                >
+                  <ToggleSetting
+                    label="Developer Mode"
+                    description="Enable advanced developer features"
+                    checked={developerMode}
+                    onChange={setDeveloperMode}
+                  />
+                  <ToggleSetting
+                    label="Beta Features"
+                    description="Access experimental features early"
+                    checked={betaFeatures}
+                    onChange={setBetaFeatures}
+                  />
+                  <ToggleSetting
+                    label="Experimental Features"
+                    description="Try cutting-edge unstable features"
+                    checked={experimentalFeatures}
+                    onChange={setExperimentalFeatures}
+                  />
+                  <ToggleSetting
+                    label="Debug Mode"
+                    description="Show detailed error logs and diagnostics"
+                    checked={debugMode}
+                    onChange={setDebugMode}
+                  />
+                  <ToggleSetting
+                    label="API Access"
+                    description="Enable programmatic access to Grux"
+                    checked={apiAccess}
+                    onChange={setApiAccess}
+                  />
+                  <ToggleSetting
+                    label="Webhook Integration"
+                    description="Send events to external webhooks"
+                    checked={webhooks}
+                    onChange={setWebhooks}
+                  />
+                  <ToggleSetting
+                    label="Custom AI Models"
+                    description="Use your own fine-tuned models"
+                    checked={customModels}
+                    onChange={setCustomModels}
+                  />
+
+                  {apiAccess && (
+                    <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                            <Key className="w-4 h-4 text-blue-400" />
+                            API Keys
+                          </h4>
+                          <p className="text-xs text-slate-400">Manage your API credentials</p>
+                        </div>
+                        <button
+                          onClick={() => alert('API key management')}
+                          className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-400 text-sm font-medium rounded-lg transition-all"
+                        >
+                          Manage
+                        </button>
+                      </div>
+                      <div className="bg-slate-900/50 border border-white/10 rounded-lg p-3">
+                        <p className="text-xs text-slate-400 font-mono">
+                          sk-grux-••••••••••••••••••••••••
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="bg-slate-800/50 border border-white/5 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                          <RefreshCw className="w-4 h-4 text-blue-400" />
+                          Reset All Settings
+                        </h4>
+                        <p className="text-xs text-slate-400">Restore default configuration</p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          if (confirm('Reset all settings to default values?')) {
+                            alert('Settings reset to defaults');
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-sm font-medium rounded-lg transition-all"
+                      >
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+                </SettingsSection>
+              </div>
 
               {/* About & Help */}
               <SettingsSection icon={Info} title="About & Support" iconColor="bg-slate-500/20 text-slate-400">
