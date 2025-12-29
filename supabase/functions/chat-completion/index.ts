@@ -4,10 +4,15 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts"
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = 'https://pbusdbddqhhhaotfvowb.supabase.co'
-const supabaseKey = process.env.SUPABASE_KEY
+const supabaseKey = Deno.env.get('SUPABASE_KEY') // Retrieve Supabase key from environment variables
 const supabase = createClient(supabaseUrl, supabaseKey)
+
+// Allow the frontend origin to be configurable via an environment variable.
+// Fallback to '*' for development/testing, but recommend a specific origin for production.
+const allowedOrigin = Deno.env.get('FRONTEND_ORIGIN') || '*'
+
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': allowedOrigin,
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
@@ -25,23 +30,31 @@ serve(async (req) => {
       throw new Error('OpenAI API key not configured')
     }
 
-    // Prepare messages for OpenAI
+    // --- Start Prompt Injection Mitigation and Structured Prompting ---
+    // Define a clear system prompt for the AI's persona and instructions.
+    const systemPrompt = "You are Grux, a helpful AI assistant. Provide clear, concise, and helpful responses to user questions. Avoid unnecessary conversational filler and get straight to the point."
+
+    // Wrap the user's message with clear delimiters to prevent it from being misinterpreted as instructions.
+    let userContent = `User message:\n---\n${message}\n---`;
+
+    // If files metadata is present, include it explicitly as part of the user's context, also with delimiters.
+    if (files && files.length > 0) {
+      const fileContext = files.map((file: any) => `* ${file.name}`).join('\n');
+      userContent += `\n\nAttached files metadata:\n---\n${fileContext}\n---`;
+    }
+
+    // Construct the messages array with distinct roles and clearly separated content.
     const messages = [
       {
         role: "system",
-        content: "You are Grux, a helpful AI assistant. Provide clear, concise, and helpful responses to user questions."
+        content: systemPrompt
       },
       {
         role: "user",
-        content: message
+        content: userContent
       }
     ]
-
-    // Add file context if files are attached
-    if (files && files.length > 0) {
-      const fileContext = files.map((file: any) => `File: ${file.name}`).join(', ')
-      messages[1].content = `${message}\n\nAttached files: ${fileContext}`
-    }
+    // --- End Prompt Injection Mitigation and Structured Prompting ---
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -50,7 +63,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-2025-04-14',
+        model: 'gpt-4o', // Updated to a valid and recent OpenAI model (e.g., gpt-4o)
         messages: messages,
         max_tokens: 1000,
         temperature: 0.7,
