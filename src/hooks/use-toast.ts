@@ -6,7 +6,7 @@ import type {
 } from "@/components/ui/toast"
 
 const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_REMOVE_DELAY = 5000 // Reduced from 1000000 to a more reasonable 5 seconds
 
 type ToasterToast = ToastProps & {
   id: string
@@ -56,8 +56,9 @@ interface State {
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
 const addToRemoveQueue = (toastId: string) => {
+  // Clear any existing timeout for this toast to prevent multiple timers or stale timers
   if (toastTimeouts.has(toastId)) {
-    return
+    clearTimeout(toastTimeouts.get(toastId));
   }
 
   const timeout = setTimeout(() => {
@@ -90,13 +91,15 @@ export const reducer = (state: State, action: Action): State => {
     case "DISMISS_TOAST": {
       const { toastId } = action
 
-      // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity
+      // Side effects - Add to remove queue
       if (toastId) {
         addToRemoveQueue(toastId)
       } else {
+        // If no specific toastId, dismiss all currently open toasts
         state.toasts.forEach((toast) => {
-          addToRemoveQueue(toast.id)
+          if (toast.open) { // Only add to queue if it's currently open
+            addToRemoveQueue(toast.id)
+          }
         })
       }
 
@@ -114,10 +117,18 @@ export const reducer = (state: State, action: Action): State => {
     }
     case "REMOVE_TOAST":
       if (action.toastId === undefined) {
+        // Clear all timeouts when all toasts are removed
+        toastTimeouts.forEach(timeout => clearTimeout(timeout));
+        toastTimeouts.clear();
         return {
           ...state,
           toasts: [],
         }
+      }
+      // Clear timeout for the specific toast being removed
+      if (toastTimeouts.has(action.toastId)) {
+        clearTimeout(toastTimeouts.get(action.toastId));
+        toastTimeouts.delete(action.toastId);
       }
       return {
         ...state,
@@ -161,6 +172,9 @@ function toast({ ...props }: Toast) {
     },
   })
 
+  // Add the new toast to the removal queue immediately to start its timer
+  addToRemoveQueue(id);
+
   return {
     id: id,
     dismiss,
@@ -179,7 +193,7 @@ function useToast() {
         listeners.splice(index, 1)
       }
     }
-  }, [state])
+  }, []) // Dependency array corrected to empty to ensure listener is added/removed once
 
   return {
     ...state,
